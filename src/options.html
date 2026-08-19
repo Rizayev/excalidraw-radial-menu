@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ru">
+<html>
 <head>
 <meta charset="utf-8">
-<title>Excalidraw Radial Menu — настройки</title>
+<title>Excalidraw Radial Menu</title>
 <link rel="stylesheet" href="options.css">
 </head>
 <body>
@@ -15,104 +15,108 @@
       <circle cx="24" cy="24" r="6.5" fill="var(--bg)"/>
     </svg>
     <div>
-      <h1>Excalidraw Radial Menu</h1>
-      <p>Круговое меню инструментов возле курсора — для пера и планшета</p>
+      <h1 data-i18n="extName"></h1>
+      <p data-i18n="optSubtitle"></p>
     </div>
   </div>
-  <span class="saved" id="saved">Сохранено</span>
+  <span class="saved" id="saved" data-i18n="optSaved"></span>
 </header>
 
 <main>
   <section class="col">
     <div class="card">
-      <h2>Горячая клавиша</h2>
-      <p class="hint">Назначьте эту же клавишу на кнопку пера в драйвере Huion.</p>
-      <button id="hotkey" class="hotkey">Caps Lock</button>
+      <h2 data-i18n="optHotkeyH"></h2>
+      <p class="hint" data-i18n="optHotkeyHint"></p>
+      <button id="hotkey" class="hotkey"></button>
       <div class="warn" id="capsWarn" hidden>
-        <strong>Caps Lock на macOS</strong> присылает нажатие через раз: первое нажатие открывает меню,
-        второе — выбирает инструмент. Работает, но индикатор Caps будет мигать.
-        Для варианта «нажал-подержал-отпустил» удобнее назначить на перо, например,
-        <code>F13</code>, <code>`</code> или <code>Alt&nbsp;+&nbsp;Q</code>.
+        <strong data-i18n="optCapsTitle"></strong> <span data-i18n-html="optCapsBody"></span>
       </div>
     </div>
 
     <div class="card">
-      <h2>Как выбирать</h2>
+      <h2 data-i18n="optModeH"></h2>
       <label class="row radio"><input type="radio" name="mode" value="auto">
-        <span><b>Авто</b><i>Держите — отпустили: выбор. Быстрый тап — меню остаётся висеть.</i></span></label>
+        <span><b data-i18n="optModeAuto"></b><i data-i18n="optModeAutoD"></i></span></label>
       <label class="row radio"><input type="radio" name="mode" value="hold">
-        <span><b>Удержание</b><i>Меню живёт, только пока клавиша зажата.</i></span></label>
+        <span><b data-i18n="optModeHold"></b><i data-i18n="optModeHoldD"></i></span></label>
       <label class="row radio"><input type="radio" name="mode" value="toggle">
-        <span><b>Переключатель</b><i>Нажал — открыл, нажал ещё раз — выбрал.</i></span></label>
-      <label class="row check"><input type="checkbox" id="followCursor"><span>Открывать возле курсора</span></label>
-      <label class="row check"><input type="checkbox" id="quickNumbers"><span>Выбор цифрами 1–9 при открытом меню</span></label>
-      <label class="row check"><input type="checkbox" id="showKbd"><span>Показывать буквы горячих клавиш</span></label>
+        <span><b data-i18n="optModeToggle"></b><i data-i18n="optModeToggleD"></i></span></label>
+      <label class="row slider"><span data-i18n="optMouse"></span>
+        <select id="mouseTrigger">
+          <option value="off" data-i18n="optMouseOff"></option>
+          <option value="right" data-i18n="optMouseRight"></option>
+          <option value="middle" data-i18n="optMouseMiddle"></option>
+        </select></label>
+      <p class="hint sub" data-i18n="optMouseHint"></p>
+      <label class="row check"><input type="checkbox" id="keepTool">
+        <span><b data-i18n="optKeepTool"></b><i data-i18n="optKeepToolD"></i></span></label>
+      <label class="row check"><input type="checkbox" id="followCursor"><span data-i18n="optFollow"></span></label>
+      <label class="row check"><input type="checkbox" id="quickNumbers"><span data-i18n="optQuickNum"></span></label>
+      <label class="row check"><input type="checkbox" id="showKbd"><span data-i18n="optShowKbd"></span></label>
     </div>
 
     <div class="card">
-      <h2>Цвет</h2>
-      <p class="hint">Задержитесь пером на секторе рисующего инструмента, не отпуская клавишу —
-        кольцо схлопнется в центр и оттуда расцветёт палитра. Отпустили в центре — только инструмент,
-        цвет не тронут.</p>
-      <label class="row slider"><span>Задержка до палитры<em id="dwellV"></em></span>
+      <h2 data-i18n="optColorH"></h2>
+      <p class="hint" data-i18n="optColorHint"></p>
+      <label class="row slider"><span><span data-i18n="optDwell"></span><em id="dwellV"></em></span>
         <input type="range" id="dwellMs" min="0" max="800" step="25"></label>
-      <label class="row slider"><span>Что меняем</span>
+      <label class="row slider"><span data-i18n="optColorTarget"></span>
         <select id="colorTarget">
-          <option value="stroke">Цвет обводки</option>
-          <option value="background">Цвет фона</option>
+          <option value="stroke" data-i18n="optStroke"></option>
+          <option value="background" data-i18n="optBackground"></option>
         </select></label>
-      <h3>Палитра</h3>
+      <h3 data-i18n="optPaletteH"></h3>
       <div class="swatches" id="palette"></div>
     </div>
 
     <div class="card">
-      <h2>Вид</h2>
-      <label class="row slider"><span>Размер<em id="radiusV"></em></span>
+      <h2 data-i18n="optViewH"></h2>
+      <label class="row slider"><span><span data-i18n="optRadius"></span><em id="radiusV"></em></span>
         <input type="range" id="radius" min="80" max="190" step="2"></label>
-      <label class="row slider"><span>Толщина кольца<em id="innerV"></em></span>
+      <label class="row slider"><span><span data-i18n="optRing"></span><em id="innerV"></em></span>
         <input type="range" id="innerRatio" min="25" max="62" step="1"></label>
-      <label class="row slider"><span>Просвет секторов<em id="gapV"></em></span>
+      <label class="row slider"><span><span data-i18n="optGap"></span><em id="gapV"></em></span>
         <input type="range" id="gapPx" min="0" max="20" step="1"></label>
-      <label class="row slider"><span>Мёртвая зона<em id="deadV"></em></span>
+      <label class="row slider"><span><span data-i18n="optDeadzone"></span><em id="deadV"></em></span>
         <input type="range" id="deadzone" min="0" max="80" step="2"></label>
-      <label class="row slider"><span>Скорость анимации<em id="animV"></em></span>
+      <label class="row slider"><span><span data-i18n="optAnim"></span><em id="animV"></em></span>
         <input type="range" id="animSpeed" min="0" max="25" step="1"></label>
-      <label class="row slider"><span>Тема</span>
+      <label class="row slider"><span data-i18n="optTheme"></span>
         <select id="theme">
-          <option value="auto">Как в Excalidraw</option>
-          <option value="light">Светлая</option>
-          <option value="dark">Тёмная</option>
+          <option value="auto" data-i18n="optThemeAuto"></option>
+          <option value="light" data-i18n="optThemeLight"></option>
+          <option value="dark" data-i18n="optThemeDark"></option>
         </select></label>
     </div>
   </section>
 
   <section class="col">
     <div class="card preview-card">
-      <h2>Колесо <small>нажмите на сектор, чтобы поменять</small>
-        <button class="ghost" id="previewMode">показать палитру</button></h2>
+      <h2><span data-i18n="optWheelH"></span> <small data-i18n="optWheelHint"></small>
+        <button class="ghost" id="previewMode"></button></h2>
       <div class="preview" id="preview">
         <div class="slot-picker" id="slotPicker" hidden>
           <div class="sp-head"><b id="spTitle"></b><button class="sp-x" id="spClose">✕</button></div>
           <div class="sp-scroll">
-            <h4>Инструменты</h4><div class="sp-grid" id="spTools"></div>
-            <h4>Цвета из палитры</h4><div class="sp-grid" id="spColors"></div>
+            <h4 data-i18n="optSecTools"></h4><div class="sp-grid" id="spTools"></div>
+            <h4 data-i18n="optSecColors"></h4><div class="sp-grid" id="spColors"></div>
           </div>
-          <button class="sp-remove" id="spRemove">Убрать этот сектор</button>
+          <button class="sp-remove" id="spRemove" data-i18n="optRemoveSlot"></button>
         </div>
       </div>
       <div class="preview-bar">
-        <button class="ghost" id="addSlot">+ добавить сектор</button>
-        <span class="bar-hint" id="slotHint">клик — сменить · перетащить — переставить</span>
+        <button class="ghost" id="addSlot"></button>
+        <span class="bar-hint" id="slotHint"></span>
       </div>
     </div>
 
     <div class="card">
-      <h2>Список <small id="count"></small></h2>
-      <p class="hint">То же самое списком: перетаскивайте, чтобы менять порядок. Первый пункт колеса — всегда сверху, дальше по часовой стрелке.</p>
+      <h2><span data-i18n="optListH"></span> <small id="count"></small></h2>
+      <p class="hint" data-i18n="optListHint"></p>
       <div class="chips" id="chosen"></div>
-      <h3>Добавить</h3>
+      <h3 data-i18n="optAdd"></h3>
       <div class="chips pool" id="pool"></div>
-      <button class="reset" id="reset">Сбросить всё к настройкам по умолчанию</button>
+      <button class="reset" id="reset" data-i18n="optReset"></button>
     </div>
   </section>
 </main>

@@ -1,148 +1,174 @@
 # Excalidraw Radial Menu
 
-Круговое (pie) меню инструментов Excalidraw, которое всплывает **прямо под курсором** по одной
-горячей клавише. Сделано под графический планшет: нажал кнопку на пере → повёл в сторону →
-отпустил. Ни одного похода к тулбару наверху.
+A radial (pie) tool menu for Excalidraw that pops up **right under the cursor** on a single
+hotkey. Built for graphics tablets: press the pen button → flick in a direction → release.
+No more trips to the toolbar at the top.
 
 <p align="center">
-  <img src="docs/wheel.jpg" width="330" alt="Колесо инструментов">
-  &nbsp;&nbsp;<img src="docs/palette.jpg" width="330" alt="Палитра по удержанию на секторе">
+  <img src="docs/wheel.jpg" width="330" alt="Tool wheel">
+  &nbsp;&nbsp;<img src="docs/palette.jpg" width="330" alt="Palette on hold">
 </p>
 
-* Выбор **по направлению**, а не по попаданию: достаточно мазнуть пером в сторону сектора —
-  курсору не нужно попадать точно в кольцо.
-* Мёртвая зона в центре = отмена.
-* Меню подхватывает тему и акцентный цвет самого Excalidraw (светлая/тёмная).
-* Текущий инструмент подсвечен рамкой, наведённый — заливкой, в центре его крупная иконка,
-  снизу — подпись и горячая клавиша.
-* **Цвет одним жестом**: задержались пером на секторе рисующего инструмента — кольцо схлопывается
-  в центр, оттуда расцветает палитра. Отпустили на цвете — получили и инструмент, и цвет.
-* Полностью настраиваемый состав: 2–14 пунктов из 23 действий плюс цвета, порядок мышкой.
-* Настройки редактируются прямо на колесе: клик по сектору меняет его содержимое,
-  перетаскивание — порядок.
+* Picking is **by direction, not by hitting a target**: flick the pen towards a sector — the
+  cursor never has to land inside the ring.
+* Dead zone in the centre = cancel.
+* **Color in one gesture**: hold on a drawing tool's sector and the ring collapses into the
+  centre, with a palette blooming out of it. Release on a color and you get both the tool and
+  the color. Move back to the centre to step back to the tools.
+* **The tool stops resetting** to Selection after every shape.
+* Works from the keyboard, from a pen button, or from the right mouse button.
+* The menu picks up Excalidraw's own theme and accent color.
+* Fully configurable: 2–14 items out of 23 actions plus your own colors.
+* Configured right on the wheel — click a sector to change it, drag to reorder.
+* English and Russian included; adding a language is one JSON file.
 
 ---
 
-## Установка
+## Install
 
-1. `chrome://extensions` → включить **Режим разработчика** (справа сверху).
-2. **Загрузить распакованное расширение** → выбрать папку `excalidraw-radial-menu`.
-3. Открыть <https://excalidraw.com/> и нажать горячую клавишу.
+1. `chrome://extensions` → turn on **Developer mode** (top right).
+2. **Load unpacked** → pick the `excalidraw-radial-menu` folder.
+3. Open <https://excalidraw.com/> and press the hotkey.
 
-Настройки: иконка расширения на панели Chrome, либо `chrome://extensions` → *Параметры*.
+Ready-made archive: see [Releases](../../releases) — download the zip, unpack it, then load the
+folder the same way. Chrome only installs signed `.crx` files from the Web Store, so an unpacked
+folder is the way to go.
 
-## Горячая клавиша и перо Huion
+Settings: the extension icon in the Chrome toolbar, or `chrome://extensions` → *Details* →
+*Extension options*.
 
-По умолчанию — **Caps Lock**. Назначьте в драйвере Huion эту же клавишу на нижнюю/верхнюю
-кнопку пера (*Настройки пера → Клавиша → Нажатие клавиш*).
+## Hotkey and the pen
 
-Важный нюанс: **на macOS Chrome присылает Caps Lock через раз** — нажатие «включения» приходит
-как `keydown`, нажатие «выключения» как `keyup`. Расширение это учитывает, и работает схема
-«нажал — меню открылось, нажал ещё раз — инструмент выбран». Схема «зажал-отпустил» с Caps Lock
-на macOS невозможна в принципе (браузер не сообщает об удержании).
+The default is **Caps Lock**. Map the same key to a pen button in your tablet driver
+(for Huion: *Pen Settings → Key → Keystroke*).
 
-Если хотите именно «зажал → мазнул → отпустил», назначьте на перо любую другую клавишу и
-укажите её в настройках, кнопкой захвата. Удобные варианты, которые Excalidraw не использует:
+One catch: **on macOS, Chrome reports Caps Lock every other press** — switching it on arrives as
+`keydown`, switching it off as `keyup`. The extension handles that, so "press to open, press
+again to pick" works. A press-hold-release flow is impossible with Caps Lock on macOS, though —
+the browser never reports that the key is being held.
 
-| Клавиша | Замечание |
+If you want hold-and-release, map the pen to any other key and capture it in the settings.
+Keys Excalidraw does not use:
+
+| Key | Note |
 |---|---|
-| `` ` `` (тильда/ё) | свободна, рядом с большим пальцем на клавиатуре |
-| `F13`–`F19` | вообще ни с чем не конфликтуют, если драйвер их умеет |
-| `Alt` + `Q`, `Alt` + `W` | безопасная комбинация, если свободных клавиш нет |
-| правый `Shift` / правый `Alt` | ловятся отдельно от левых |
+| `` ` `` | free, right next to your thumb |
+| `F13`–`F19` | conflict with nothing at all, if your driver can send them |
+| `Alt` + `Q`, `Alt` + `W` | a safe combo when no plain key is free |
+| right `Shift` / right `Alt` | caught separately from the left ones |
 
-Захват клавиши в настройках понимает и модификаторы: нажмите комбинацию целиком.
+The capture button understands modifiers too — just press the whole combination.
 
-## Режимы выбора
+## Mouse
 
-| Режим | Поведение |
+Without a tablet the same menu works on a mouse button: **Settings → How to pick → Open with a
+mouse button**. Press, flick, release — or click once and pick with a second click.
+
+While that is on, the chosen button replaces Excalidraw's own context menu.
+
+## Pick modes
+
+| Mode | Behaviour |
 |---|---|
-| **Авто** (по умолчанию) | Держите дольше ~0.2 с — выбор происходит по отпусканию. Быстрый тап — меню остаётся висеть, выбираете тапом пера, цифрой или буквой. |
-| **Удержание** | Меню живёт строго пока клавиша зажата. |
-| **Переключатель** | Первое нажатие открывает, второе выбирает. |
+| **Auto** (default) | Hold for longer than ~0.2 s and the pick happens on release. A quick tap leaves the menu open — then pick with a tap, a digit or a letter. |
+| **Hold** | The menu lives strictly while the key is held. |
+| **Toggle** | The first press opens, the second one picks. |
 
-При открытом меню также работают: `Esc` — отмена, `1`–`9` — выбор по номеру сектора,
-буква инструмента (`R`, `O`, `T`…) — прямой выбор.
+While the menu is open: `Esc` cancels, `1`–`9` pick by sector number, and a tool's own letter
+(`R`, `O`, `T`…) picks it directly.
 
-## Цвет
+## Color
 
-Задержитесь пером на секторе карандаша, прямоугольника, эллипса, ромба, стрелки, линии или текста,
-**не отпуская клавишу**, — по краю сектора побежит дуга, и через 350 мс кольцо инструментов
-схлопнется в центр, а оттуда расцветёт палитра. Дальше как обычно: мазнули в сторону цвета,
-отпустили. Применятся сразу оба — и инструмент, и цвет.
+Hold the pen still on the sector of Draw, Rectangle, Ellipse, Diamond, Arrow, Line or Text
+**without releasing the key** — an arc runs along the edge of the sector and after 350 ms the
+tool ring collapses into the centre and a palette blooms out of it. Then it is business as
+usual: flick towards a color, release. Both the tool and the color are applied.
 
-* Дуга по краю сектора показывает, что у него есть палитра, и сколько осталось держать.
-* Пока перо движется, отсчёт сбрасывается — случайно провалиться в палитру не выйдет.
-* Отпустили в центре палитры — применится только инструмент, цвет останется прежним.
-* `Esc` — отмена целиком.
+* The arc shows which sectors have a palette and how much longer to hold.
+* The countdown resets while the pen is moving, so you cannot fall into the palette by accident.
+* **Move back to the centre and the palette steps back to the tools** — nothing is applied.
+* Release in the centre of the palette and only the tool is applied, the color is left alone.
+* `Esc` cancels everything.
 
-В настройках задаётся своя палитра (2–14 цветов, любой hex), задержка до её появления
-(0 — выключить подменю) и что именно менять: цвет обводки или цвет фона.
+The settings hold your own palette (2–14 colors, any hex), the delay before it appears
+(0 turns the submenu off) and what exactly to change: stroke color or background color.
 
-Цвета можно класть и прямо в основное колесо — наравне с инструментами, они есть
-в списке «что положить» в секторе.
+Colors can also go straight into the main wheel, alongside the tools — they are in the
+"what goes here" list for every sector.
 
-## Настройка колеса
+## Keeping the tool active
 
-Всё правится прямо на превью:
+By default Excalidraw goes back to Selection after every single shape, which is painful when you
+need five arrows in a row. **Settings → How to pick → Keep the tool active after drawing** turns
+on Excalidraw's own lock whenever a tool is picked from the wheel. The extension only ever turns
+the lock on, never off, so it does not fight you if you toggle it yourself.
 
-* **клик по сектору** — выбрать, что в нём лежит (любой инструмент или цвет из палитры);
-* **перетаскивание сектора** — поменять порядок;
-* **«+ добавить сектор»** — новый пункт;
-* кнопка **«показать палитру»** переключает превью на кольцо цветов — там клик по сектору
-  открывает выбор цвета, перетаскивание меняет порядок цветов.
+## Configuring the wheel
 
-Ниже дублируется то же самое списком — иногда порядок удобнее менять там.
+Everything is edited right on the preview:
 
-<p align="center"><img src="docs/options.jpg" width="820" alt="Страница настроек"></p>
+* **click a sector** — choose what goes in it (any tool, or a color from the palette);
+* **drag a sector** — reorder;
+* **"+ add sector"** — one more item;
+* the **"show palette"** button flips the preview to the color ring, where clicking a sector
+  opens a color picker and dragging reorders the palette.
 
-## Что можно положить в меню
+The same thing is duplicated as a list below — sometimes reordering is easier there.
 
-Инструменты: карандаш, ластик, выделение, лассо, рука, прямоугольник, ромб, эллипс, стрелка,
-линия, текст, изображение, фрейм, лазер, заливка, «в фигуру», web-вставка.
-Действия: отменить, вернуть, удалить, дублировать, сгруппировать, вписать всё.
-Плюс любые цвета из вашей палитры.
+<p align="center"><img src="docs/options.jpg" width="820" alt="Settings page"></p>
 
-## Как это устроено
+## What can go in the wheel
 
-Расширение не лезет во внутренности Excalidraw и не патчит его состояние.
+Tools: draw, eraser, selection, lasso, hand, rectangle, diamond, ellipse, arrow, line, text,
+image, frame, laser pointer, bucket fill, draw-to-shape, web embed.
+Actions: undo, redo, delete, duplicate, group, zoom to fit.
+Plus any colors from your palette.
 
-**Инструменты.** В `document` уходят ровно те же `KeyboardEvent`, которые сгенерировала бы
-настоящая клавиатура, — Excalidraw переключает инструмент своим штатным обработчиком. Текущий
-инструмент читается из `[data-testid^="toolbar-"][aria-pressed="true"]`. Лассо и web-вставка
-горячих клавиш не имеют — для них расширение открывает выпадашку «ещё» и жмёт пункт само.
+## Languages
 
-**Цвет.** В левой панели свойств находится нужный ряд (`.color-picker-container`: «Обводка»
-опознаётся по top-pick `#1e1e1e`, «Фон» — по `transparent`), кликом по его триггеру открывается
-штатный попап, в его hex-поле пишется цвет, и попап закрывается повторным кликом. На эти ~50 мс
-попап скрыт инжектнутым стилем, поэтому мигания не видно. `Escape` для закрытия не используется:
-он заодно сбрасывает инструмент на «выделение». Так работает любой hex, а не только пять
-стандартных top-picks.
+Every visible string lives in `_locales/<lang>/messages.json`; `en` is the default. To add a
+language, copy `_locales/en` to `_locales/<your-lang>`, translate the `message` values and
+reload the extension — Chrome picks the folder matching the browser UI language on its own.
+Nothing else needs touching.
 
-**Тема** берётся из класса `theme--dark` и CSS-переменных `--color-primary` / `--island-bg-color`
-на контейнере `.excalidraw`.
+## How it works
 
-Само меню живёт в Shadow DOM поверх страницы (`z-index: 2147483600`), поэтому стили Excalidraw
-и расширения не пересекаются.
+The extension does not reach into Excalidraw's internals and does not patch its state.
+
+**Tools.** It dispatches to `document` exactly the `KeyboardEvent`s a real keyboard would
+produce, and Excalidraw switches the tool through its own handler. The current tool is read from
+`[data-testid^="toolbar-"][aria-pressed="true"]`. Lasso and web embed have no shortcut, so for
+those the extension opens the "more tools" dropdown and clicks the item itself.
+
+**Color.** It finds the right row in the properties panel (`.color-picker-container`: stroke is
+identified by the `#1e1e1e` top pick, background by `transparent`), clicks its trigger to open
+the stock popover, writes the color into its hex field and closes the popover with a second
+click. For those ~50 ms the popover is hidden by an injected style, so there is no flash.
+`Escape` is deliberately not used to close it — it would also reset the tool to Selection. This
+is why any hex works, not just the five stock top picks.
+
+**Theme** comes from the `theme--dark` class and the `--color-primary` / `--island-bg-color` CSS
+variables on the `.excalidraw` container.
 
 ```
-manifest.json         манифест MV3
-src/common.js         инструменты, иконки, геометрия колеса, стили (общее для меню и настроек)
-src/content.js        content-скрипт: горячая клавиша, оверлей, выбор сектора, отправка клавиш
-src/options.html/js/css  настройки с живым превью
-src/background.js     клик по иконке → открыть настройки
-dev/                локальный стенд для отладки, в расширение не входит
+manifest.json            MV3 manifest
+_locales/<lang>/         all visible strings
+src/common.js            tools, icons, wheel geometry, styles (shared by menu and settings)
+src/content.js           content script: hotkey, overlay, sector picking, dispatching
+src/options.html/js/css  settings with a live, editable preview
+src/background.js        toolbar icon click → open settings
+dev/                     local test bench, not part of the extension
 ```
 
-### Локальная отладка
+### Local development
 
 ```bash
 python3 dev/serve.py          # http://127.0.0.1:8899
 ```
 
-`dev/index.html` — макет Excalidraw (тулбар + лог нажатий) с заглушкой `chrome.storage`,
-`dev/options.html` — страница настроек вне расширения. Пересобрать вторую после правки
-`src/options.html`:
+`dev/index.html` is an Excalidraw mock (toolbar, color panel, event log) with a `chrome.*` stub;
+`dev/options.html` is the settings page outside the extension. Add `?lang=ru` to either to check
+a translation. Rebuild the second one after editing `src/options.html`:
 
 ```bash
 sed -e 's#href="options.css"#href="../src/options.css"#' \
@@ -152,11 +178,15 @@ sed -e 's#href="options.css"#href="../src/options.css"#' \
     src/options.html > dev/options.html
 ```
 
-## Своя копия Excalidraw
+## Self-hosted Excalidraw
 
-Для self-hosted версии добавьте её адрес в `manifest.json` — в `host_permissions`
-и в `content_scripts[0].matches` — и перезагрузите расширение.
+Add your address to `manifest.json` — to `host_permissions` and to
+`content_scripts[0].matches` — and reload the extension.
 
-## Лицензия
+## License
 
-MIT — см. [LICENSE](LICENSE). Иконки нарисованы под стиль Excalidraw и tabler-icons.
+MIT — see [LICENSE](LICENSE). Icons are drawn to match the Excalidraw and tabler-icons style.
+
+---
+
+[Русская версия](README.ru.md)

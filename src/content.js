@@ -13,9 +13,12 @@
   let px = window.innerWidth / 2, py = window.innerHeight / 2;
   let cx = px, cy = py;
   let dwellTimer = 0, dwellIdx = -1, dwellX = 0, dwellY = 0;
+  let backTimer = 0;
+  let byMouse = false;         // меню открыто кнопкой мыши, а не клавишей
   let lastColorable = 'freedraw';
 
   const DWELL_TOL = 8;         // px: насколько можно дрогнуть пером, не сбив удержание
+  const BACK_MS = 160;         // мс в мёртвой зоне подменю → шаг назад к инструментам
   const clamp = (v, a, b) => (a > b ? (a + b) / 2 : Math.max(a, Math.min(b, v)));
   const isCaps = () => cfg.trigger && cfg.trigger.code === 'CapsLock';
   const editing = () => {
@@ -23,6 +26,8 @@
     return !!a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable);
   };
   const anim = () => cfg.animSpeed || 1;
+  const MOUSE_BTN = { right: 2, middle: 1 };
+  const mouseBtn = () => MOUSE_BTN[cfg.mouseTrigger];   // undefined, если выключено
 
   /* ------------------------------------------------------------ настройки */
   chrome.storage.sync.get(ERM.DEFAULTS, (v) => { cfg = Object.assign({}, ERM.DEFAULTS, v); });
@@ -99,6 +104,17 @@
     return t ? (t.style.getPropertyValue('--swatch-color') || '').trim().toLowerCase() : null;
   }
 
+  /* Excalidraw после одной фигуры возвращается к «Выделению», если выключен
+     его собственный «замок». Включаем замок, а не выключаем — чужое состояние
+     не ломаем. */
+  function ensureLock() {
+    const b = document.querySelector('[data-testid="toolbar-lock"]');
+    if (!b) return;
+    const on = b.getAttribute('aria-pressed') === 'true' ||
+      /ToolIcon--checked/.test(b.className.toString());
+    if (!on) b.click();
+  }
+
   /* ------------------------------------------------------ выбор действия */
   function activate(id) {
     const t = ERM.TOOLS[id];
@@ -108,7 +124,8 @@
     if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable)) {
       try { a.blur(); } catch (e) { /* no-op */ }
     }
-    if (t.click) { clickToolbar(t.click); return; }
+    const lock = () => { if (cfg.keepTool && t.lockable) ensureLock(); };
+    if (t.click) { clickToolbar(t.click); setTimeout(lock, 90); return; }
     const init = {
       key: t.key, code: t.code, keyCode: t.keyCode, charCode: 0, which: t.keyCode,
       bubbles: true, cancelable: true, composed: true, view: window,
@@ -121,6 +138,7 @@
       document.dispatchEvent(new KeyboardEvent('keydown', init));
       document.dispatchEvent(new KeyboardEvent('keyup', init));
     } finally { synthetic = false; }
+    lock();
   }
 
   // инструменты без горячей клавиши живут в выпадашке «ещё» — жмём их руками
@@ -183,7 +201,7 @@
   function show() {
     ensureHost();
     if (closeTimer) { clearTimeout(closeTimer); closeTimer = 0; }
-    clearDwell();
+    clearDwell(); clearBack();
     subTool = null;
     layer.textContent = '';
     layer.style.removeProperty('--erm-accent');
@@ -211,8 +229,8 @@
 
   function hide(commit) {
     if (!open) return;
-    open = false; sticky = false;
-    clearDwell();
+    open = false; sticky = false; byMouse = false;
+    clearDwell(); clearBack();
     hostEl.style.pointerEvents = 'none';
 
     const idx = wheel.hover;
@@ -248,6 +266,18 @@
     dwellTimer = 0; dwellIdx = -1;
     if (wheel) wheel.setDwell(-1, 0);
   }
+  function clearBack() { clearTimeout(backTimer); backTimer = 0; }
+
+  /* перерисовать колесо на месте: старое схлопывается в центр, новое расцветает */
+  function swapWheel(build) {
+    const oldWrap = wheel.wrap;
+    oldWrap.classList.add('erm-imploding');
+    setTimeout(() => { if (oldWrap.parentNode) oldWrap.remove(); }, Math.max(30, 220 / anim()));
+    wheel = build();
+    wheel.wrap.classList.add('erm-blooming');
+    placeWrap(wheel.wrap);
+    layer.appendChild(wheel.wrap);
+  }
 
   function armDwell(idx) {
     clearTimeout(dwellTimer);
@@ -263,20 +293,22 @@
     const t = ERM.TOOLS[toolId];
     if (!t) return;
     subTool = toolId;
-    clearDwell();
-
-    const oldWrap = wheel.wrap;
-    oldWrap.classList.add('erm-imploding');
-    setTimeout(() => { if (oldWrap.parentNode) oldWrap.remove(); }, Math.max(30, 220 / anim()));
-
-    wheel = ERM.buildWheel(cfg, ERM.colorEntries(cfg.colors), {
+    clearDwell(); clearBack();
+    swapWheel(() => ERM.buildWheel(cfg, ERM.colorEntries(cfg.colors), {
       fillWedges: true, hubIcon: t.icon, hubLabel: t.label
-    });
-    wheel.wrap.classList.add('erm-blooming');
-    placeWrap(wheel.wrap);
-    layer.appendChild(wheel.wrap);
+    }));
     const cur = currentColor();
     if (cur) wheel.setCurrent(ERM.colorId(cur));
+    updateHover();
+  }
+
+  /* возврат в мёртвую зону палитры = шаг назад к кольцу инструментов */
+  function exitSub() {
+    if (!open || !subTool) return;
+    subTool = null;
+    clearDwell(); clearBack();
+    swapWheel(() => ERM.buildWheel(cfg, ERM.entriesFor(cfg.tools), {}));
+    wheel.setCurrent(currentTool());
     updateHover();
   }
 
@@ -296,7 +328,13 @@
     }
     const changed = idx !== wheel.hover;
     wheel.setHover(idx);
-    if (!subTool && (changed || Math.hypot(px - dwellX, py - dwellY) > DWELL_TOL)) armDwell(idx);
+    if (subTool) {
+      // держим перо в центре — возвращаемся на кольцо инструментов
+      if (idx < 0) { if (!backTimer) backTimer = setTimeout(exitSub, BACK_MS); }
+      else clearBack();
+    } else if (changed || Math.hypot(px - dwellX, py - dwellY) > DWELL_TOL) {
+      armDwell(idx);
+    }
   }
 
   /* -------------------------------------------------------------- события */
@@ -309,16 +347,38 @@
 
   window.addEventListener('pointerdown', (e) => {
     px = e.clientX; py = e.clientY;
-    if (!open) return;
+    const btn = mouseBtn();
+    if (!open) {
+      if (btn !== undefined && e.button === btn && e.isTrusted) {
+        kill(e); byMouse = true; show();
+      }
+      return;
+    }
+    // повторное нажатие той же кнопки, которой открыли, — не выбор
+    if (byMouse && e.button === btn) { kill(e); return; }
     updateHover();
     kill(e);
     hide(true);
   }, true);
 
-  ['pointerup', 'click', 'contextmenu', 'wheel'].forEach((type) => {
+  window.addEventListener('pointerup', (e) => {
+    if (!open) return;
+    kill(e);
+    if (!byMouse || e.button !== mouseBtn()) return;
+    const held = performance.now() - openedAt;
+    if (cfg.mode === 'hold' || held >= cfg.tapMs) hide(true);
+    else sticky = true;                 // короткий клик — меню остаётся висеть
+  }, true);
+
+  ['click', 'auxclick', 'wheel'].forEach((type) => {
     window.addEventListener(type, (e) => { if (open) kill(e); },
       { capture: true, passive: false });
   });
+
+  // правая кнопка занята под меню — родное контекстное меню подавляем
+  window.addEventListener('contextmenu', (e) => {
+    if (open || cfg.mouseTrigger === 'right') kill(e);
+  }, { capture: true, passive: false });
 
   window.addEventListener('keydown', (e) => {
     if (synthetic) return;

@@ -5,6 +5,12 @@
 
   const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform) || /Mac/.test(navigator.userAgent);
 
+  /* Все видимые строки живут в _locales/<lang>/messages.json.
+     Чтобы добавить язык, достаточно положить рядом ещё одну папку с messages.json. */
+  const t = (key, subs) => {
+    try { return chrome.i18n.getMessage(key, subs) || ''; } catch (e) { return ''; }
+  };
+
   /* ------------------------------------------------------------------ иконки
      24x24, обводка currentColor, в стиле Excalidraw / tabler-icons        */
   const ICONS = {
@@ -40,30 +46,32 @@
      click — data-testid кнопки (для инструментов без горячей клавиши).
      colorable — у инструмента есть цвет обводки, значит доступно подменю.   */
   const TOOLS = {
-    freedraw:   { label: 'Карандаш',      icon: 'freedraw',   kbd: 'P',  key: 'p', code: 'KeyP', keyCode: 80, colorable: true },
-    eraser:     { label: 'Ластик',        icon: 'eraser',     kbd: 'E',  key: 'e', code: 'KeyE', keyCode: 69 },
-    selection:  { label: 'Выделение',     icon: 'selection',  kbd: 'V',  key: 'v', code: 'KeyV', keyCode: 86 },
-    lasso:      { label: 'Лассо',         icon: 'lasso',      kbd: '',   click: 'toolbar-lasso' },
-    hand:       { label: 'Рука',          icon: 'hand',       kbd: 'H',  key: 'h', code: 'KeyH', keyCode: 72 },
-    rectangle:  { label: 'Прямоугольник', icon: 'rectangle',  kbd: 'R',  key: 'r', code: 'KeyR', keyCode: 82, colorable: true },
-    diamond:    { label: 'Ромб',          icon: 'diamond',    kbd: 'D',  key: 'd', code: 'KeyD', keyCode: 68, colorable: true },
-    ellipse:    { label: 'Эллипс',        icon: 'ellipse',    kbd: 'O',  key: 'o', code: 'KeyO', keyCode: 79, colorable: true },
-    arrow:      { label: 'Стрелка',       icon: 'arrow',      kbd: 'A',  key: 'a', code: 'KeyA', keyCode: 65, colorable: true },
-    line:       { label: 'Линия',         icon: 'line',       kbd: 'L',  key: 'l', code: 'KeyL', keyCode: 76, colorable: true },
-    text:       { label: 'Текст',         icon: 'text',       kbd: 'T',  key: 't', code: 'KeyT', keyCode: 84, colorable: true },
-    image:      { label: 'Изображение',   icon: 'image',      kbd: '9',  key: '9', code: 'Digit9', keyCode: 57 },
-    frame:      { label: 'Фрейм',         icon: 'frame',      kbd: 'F',  key: 'f', code: 'KeyF', keyCode: 70 },
-    laser:      { label: 'Лазер',         icon: 'laser',      kbd: 'K',  key: 'k', code: 'KeyK', keyCode: 75 },
-    bucketfill: { label: 'Заливка',       icon: 'bucketfill', kbd: 'B',  key: 'b', code: 'KeyB', keyCode: 66 },
-    autoshape:  { label: 'В фигуру',      icon: 'autoshape',  kbd: '⇧X', key: 'X', code: 'KeyX', keyCode: 88, shift: true },
-    embeddable: { label: 'Web-вставка',   icon: 'embeddable', kbd: '',   click: 'toolbar-embeddable' },
-    undo:       { label: 'Отменить',      icon: 'undo',       kbd: IS_MAC ? '⌘Z' : 'Ctrl+Z',   key: 'z', code: 'KeyZ', keyCode: 90, mod: true },
-    redo:       { label: 'Вернуть',       icon: 'redo',       kbd: IS_MAC ? '⇧⌘Z' : 'Ctrl+⇧Z', key: 'z', code: 'KeyZ', keyCode: 90, mod: true, shift: true },
-    del:        { label: 'Удалить',       icon: 'trash',      kbd: '⌫',  key: 'Backspace', code: 'Backspace', keyCode: 8 },
-    duplicate:  { label: 'Дублировать',   icon: 'duplicate',  kbd: IS_MAC ? '⌘D' : 'Ctrl+D',   key: 'd', code: 'KeyD', keyCode: 68, mod: true },
-    group:      { label: 'Сгруппировать', icon: 'group',      kbd: IS_MAC ? '⌘G' : 'Ctrl+G',   key: 'g', code: 'KeyG', keyCode: 71, mod: true },
-    zoomfit:    { label: 'Вписать всё',   icon: 'zoomfit',    kbd: '⇧1', key: '!', code: 'Digit1', keyCode: 49, shift: true }
+    freedraw:   { icon: 'freedraw',   kbd: 'P',  key: 'p', code: 'KeyP', keyCode: 80, colorable: true, lockable: true },
+    eraser:     { icon: 'eraser',     kbd: 'E',  key: 'e', code: 'KeyE', keyCode: 69 },
+    selection:  { icon: 'selection',  kbd: 'V',  key: 'v', code: 'KeyV', keyCode: 86 },
+    lasso:      { icon: 'lasso',      kbd: '',   click: 'toolbar-lasso' },
+    hand:       { icon: 'hand',       kbd: 'H',  key: 'h', code: 'KeyH', keyCode: 72 },
+    rectangle:  { icon: 'rectangle',  kbd: 'R',  key: 'r', code: 'KeyR', keyCode: 82, colorable: true, lockable: true },
+    diamond:    { icon: 'diamond',    kbd: 'D',  key: 'd', code: 'KeyD', keyCode: 68, colorable: true, lockable: true },
+    ellipse:    { icon: 'ellipse',    kbd: 'O',  key: 'o', code: 'KeyO', keyCode: 79, colorable: true, lockable: true },
+    arrow:      { icon: 'arrow',      kbd: 'A',  key: 'a', code: 'KeyA', keyCode: 65, colorable: true, lockable: true },
+    line:       { icon: 'line',       kbd: 'L',  key: 'l', code: 'KeyL', keyCode: 76, colorable: true, lockable: true },
+    text:       { icon: 'text',       kbd: 'T',  key: 't', code: 'KeyT', keyCode: 84, colorable: true, lockable: true },
+    image:      { icon: 'image',      kbd: '9',  key: '9', code: 'Digit9', keyCode: 57, lockable: true },
+    frame:      { icon: 'frame',      kbd: 'F',  key: 'f', code: 'KeyF', keyCode: 70, lockable: true },
+    laser:      { icon: 'laser',      kbd: 'K',  key: 'k', code: 'KeyK', keyCode: 75 },
+    bucketfill: { icon: 'bucketfill', kbd: 'B',  key: 'b', code: 'KeyB', keyCode: 66, lockable: true },
+    autoshape:  { icon: 'autoshape',  kbd: '⇧X', key: 'X', code: 'KeyX', keyCode: 88, shift: true, lockable: true },
+    embeddable: { icon: 'embeddable', kbd: '',   click: 'toolbar-embeddable', lockable: true },
+    undo:       { icon: 'undo',       kbd: IS_MAC ? '⌘Z' : 'Ctrl+Z',   key: 'z', code: 'KeyZ', keyCode: 90, mod: true },
+    redo:       { icon: 'redo',       kbd: IS_MAC ? '⇧⌘Z' : 'Ctrl+⇧Z', key: 'z', code: 'KeyZ', keyCode: 90, mod: true, shift: true },
+    del:        { icon: 'trash',      kbd: '⌫',  key: 'Backspace', code: 'Backspace', keyCode: 8 },
+    duplicate:  { icon: 'duplicate',  kbd: IS_MAC ? '⌘D' : 'Ctrl+D',   key: 'd', code: 'KeyD', keyCode: 68, mod: true },
+    group:      { icon: 'group',      kbd: IS_MAC ? '⌘G' : 'Ctrl+G',   key: 'g', code: 'KeyG', keyCode: 71, mod: true },
+    zoomfit:    { icon: 'zoomfit',    kbd: '⇧1', key: '!', code: 'Digit1', keyCode: 49, shift: true }
   };
+
+  Object.keys(TOOLS).forEach((id) => { TOOLS[id].label = t('tool_' + id) || id; });
 
   const TOOL_ORDER = ['freedraw', 'eraser', 'selection', 'lasso', 'hand', 'rectangle', 'diamond', 'ellipse',
     'arrow', 'line', 'text', 'image', 'frame', 'laser', 'bucketfill', 'autoshape', 'embeddable',
@@ -72,14 +80,10 @@
   /* ------------------------------------------------------------- палитра */
   const DEFAULT_COLORS = ['#1e1e1e', '#e03131', '#f08c00', '#2f9e44', '#0c8599', '#1971c2', '#6741d9', '#c2255c'];
 
-  const COLOR_NAMES = {
-    '#1e1e1e': 'Чёрный', '#343a40': 'Тёмно-серый', '#868e96': 'Серый', '#ffffff': 'Белый',
-    '#e03131': 'Красный', '#c2255c': 'Розовый', '#9c36b5': 'Пурпурный', '#6741d9': 'Фиолетовый',
-    '#3b5bdb': 'Индиго', '#1971c2': 'Синий', '#0c8599': 'Бирюзовый', '#099268': 'Изумрудный',
-    '#2f9e44': 'Зелёный', '#66a80f': 'Лаймовый', '#f08c00': 'Оранжевый', '#e8590c': 'Морковный',
-    '#846358': 'Коричневый', 'transparent': 'Прозрачный'
+  const colorName = (hex) => {
+    const h = String(hex).toLowerCase();
+    return t('color_' + h.replace('#', '')) || h.toUpperCase();
   };
-  const colorName = (hex) => COLOR_NAMES[String(hex).toLowerCase()] || String(hex).toUpperCase();
 
   const isColorId = (id) => typeof id === 'string' && id.slice(0, 6) === 'color:';
   const colorId = (hex) => 'color:' + String(hex).toLowerCase();
@@ -101,11 +105,13 @@
   const DEFAULTS = {
     trigger: { code: 'CapsLock', key: 'CapsLock', ctrl: false, alt: false, shift: false, meta: false },
     mode: 'auto',              // auto | hold | toggle
+    mouseTrigger: 'off',       // off | right | middle — открытие кнопкой мыши
     tapMs: 220,
     tools: ['freedraw', 'eraser', 'selection', 'text', 'rectangle', 'ellipse', 'arrow', 'undo'],
     colors: DEFAULT_COLORS.slice(),
     dwellMs: 350,              // 0 = подменю цвета выключено
     colorTarget: 'stroke',     // stroke | background
+    keepTool: true,            // держать «замок» Excalidraw включённым
     radius: 120,
     innerRatio: 0.45,
     gapPx: 8,
@@ -282,7 +288,9 @@
         setHubIcon(opts.hubIcon || 'cross', 1.9);
         hubIco.style.stroke = '';
         hubIco.classList.toggle('cancel', !opts.hubIcon);
-        nameEl.textContent = opts.hubIcon ? ((opts.hubLabel || 'Инструмент') + ' · цвет прежний') : 'Отмена';
+        nameEl.textContent = opts.hubIcon
+          ? t('wheelKeepColor', [opts.hubLabel || ''])
+          : t('wheelCancel');
         kbdEl.textContent = '';
         label.classList.add('on', 'cancel');
         return;
@@ -290,7 +298,9 @@
       setHubIcon(opts.hubIcon || e.icon || 'palette', 1.7);
       hubIco.classList.remove('cancel');
       hubIco.style.stroke = e.isColor ? e.color : '';
-      nameEl.textContent = opts.hubLabel ? opts.hubLabel + ' · ' + e.label : e.label;
+      nameEl.textContent = opts.hubLabel
+        ? t('wheelToolAndColor', [opts.hubLabel, e.label])
+        : e.label;
       kbdEl.textContent = e.kbd || '';
       label.classList.add('on');
       label.classList.remove('cancel');
@@ -525,7 +535,7 @@
 }`;
 
   root.ERM = {
-    ICONS, TOOLS, TOOL_ORDER, DEFAULTS, DEFAULT_COLORS, COLOR_NAMES, CSS, IS_MAC,
+    ICONS, TOOLS, TOOL_ORDER, DEFAULTS, DEFAULT_COLORS, CSS, IS_MAC, t,
     buildWheel, entryFor, entriesFor, colorEntries, colorName, colorId, colorOf, isColorId,
     triggerMatches, triggerLabel, keyName
   };

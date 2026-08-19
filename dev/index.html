@@ -39,12 +39,16 @@ const COLORABLE=new Set(['freedraw','rectangle','diamond','ellipse','arrow','lin
 const KEYMAP={v:'selection','1':'selection',r:'rectangle','2':'rectangle',d:'diamond','3':'diamond',
  o:'ellipse','4':'ellipse',a:'arrow','5':'arrow',l:'line','6':'line',p:'freedraw','7':'freedraw',
  t:'text','8':'text','9':'image',e:'eraser','0':'eraser',h:'hand',f:'frame'};
+const log=[];function say(s){log.unshift(s);log.length=Math.min(log.length,10);document.getElementById('log').textContent=log.join('\n');}
 const bar=document.querySelector('.App-toolbar');
+const lock=document.createElement('button');
+lock.dataset.testid='toolbar-lock'; lock.textContent='🔒'; lock.setAttribute('aria-pressed','false');
+lock.addEventListener('click',()=>{const on=lock.getAttribute('aria-pressed')==='true';
+  lock.setAttribute('aria-pressed', on?'false':'true'); say('замок → '+(on?'выкл':'вкл')+'  ✔');});
+bar.appendChild(lock);
 TOOLS.forEach(id=>{const b=document.createElement('button');b.dataset.testid='toolbar-'+id;
  b.setAttribute('aria-pressed', id==='freedraw'?'true':'false');b.textContent=id.slice(0,2);bar.appendChild(b);});
 bar.appendChild(Object.assign(document.createElement('button'),{textContent:'⋮'}));
-
-const log=[];function say(s){log.unshift(s);log.length=Math.min(log.length,10);document.getElementById('log').textContent=log.join('\n');}
 
 /* --- макет левой панели: два ряда «Обводка» и «Фон», как в настоящем Excalidraw --- */
 const STROKE_PICKS=['#1e1e1e','#e03131','#2f9e44','#1971c2','#f08c00'];
@@ -79,7 +83,7 @@ function togglePop(trig,label){
 document.getElementById('rows').append(row('Обводка',STROKE_PICKS), row('Фон',BG_PICKS));
 
 function setTool(t){
-  document.querySelectorAll('[data-testid^=toolbar-]').forEach(b=>b.setAttribute('aria-pressed',
+  document.querySelectorAll('[data-testid^=toolbar-]:not([data-testid=toolbar-lock])').forEach(b=>b.setAttribute('aria-pressed',
     b.dataset.testid==='toolbar-'+t?'true':'false'));
   document.getElementById('left').hidden = !COLORABLE.has(t);   // панель только у рисующих
   if(pop){pop.remove();pop=null;}

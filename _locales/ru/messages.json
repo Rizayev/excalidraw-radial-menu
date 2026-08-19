@@ -1,0 +1,329 @@
+{
+  "extName": {
+    "message": "Excalidraw Radial Menu"
+  },
+  "extDesc": {
+    "message": "Круговое меню инструментов Excalidraw возле курсора. Сделано для пера и графических планшетов."
+  },
+  "extOptionsTitle": {
+    "message": "Excalidraw Radial Menu — настройки"
+  },
+  "tool_freedraw": {
+    "message": "Карандаш"
+  },
+  "tool_eraser": {
+    "message": "Ластик"
+  },
+  "tool_selection": {
+    "message": "Выделение"
+  },
+  "tool_lasso": {
+    "message": "Лассо"
+  },
+  "tool_hand": {
+    "message": "Рука"
+  },
+  "tool_rectangle": {
+    "message": "Прямоугольник"
+  },
+  "tool_diamond": {
+    "message": "Ромб"
+  },
+  "tool_ellipse": {
+    "message": "Эллипс"
+  },
+  "tool_arrow": {
+    "message": "Стрелка"
+  },
+  "tool_line": {
+    "message": "Линия"
+  },
+  "tool_text": {
+    "message": "Текст"
+  },
+  "tool_image": {
+    "message": "Изображение"
+  },
+  "tool_frame": {
+    "message": "Фрейм"
+  },
+  "tool_laser": {
+    "message": "Лазер"
+  },
+  "tool_bucketfill": {
+    "message": "Заливка"
+  },
+  "tool_autoshape": {
+    "message": "В фигуру"
+  },
+  "tool_embeddable": {
+    "message": "Web-вставка"
+  },
+  "tool_undo": {
+    "message": "Отменить"
+  },
+  "tool_redo": {
+    "message": "Вернуть"
+  },
+  "tool_del": {
+    "message": "Удалить"
+  },
+  "tool_duplicate": {
+    "message": "Дублировать"
+  },
+  "tool_group": {
+    "message": "Сгруппировать"
+  },
+  "tool_zoomfit": {
+    "message": "Вписать всё"
+  },
+  "color_1e1e1e": {
+    "message": "Чёрный"
+  },
+  "color_343a40": {
+    "message": "Тёмно-серый"
+  },
+  "color_868e96": {
+    "message": "Серый"
+  },
+  "color_ffffff": {
+    "message": "Белый"
+  },
+  "color_e03131": {
+    "message": "Красный"
+  },
+  "color_c2255c": {
+    "message": "Розовый"
+  },
+  "color_9c36b5": {
+    "message": "Пурпурный"
+  },
+  "color_6741d9": {
+    "message": "Фиолетовый"
+  },
+  "color_3b5bdb": {
+    "message": "Индиго"
+  },
+  "color_1971c2": {
+    "message": "Синий"
+  },
+  "color_0c8599": {
+    "message": "Бирюзовый"
+  },
+  "color_099268": {
+    "message": "Изумрудный"
+  },
+  "color_2f9e44": {
+    "message": "Зелёный"
+  },
+  "color_66a80f": {
+    "message": "Лаймовый"
+  },
+  "color_f08c00": {
+    "message": "Оранжевый"
+  },
+  "color_e8590c": {
+    "message": "Морковный"
+  },
+  "color_846358": {
+    "message": "Коричневый"
+  },
+  "color_transparent": {
+    "message": "Прозрачный"
+  },
+  "wheelCancel": {
+    "message": "Отмена"
+  },
+  "wheelKeepColor": {
+    "message": "$1 · цвет прежний"
+  },
+  "wheelToolAndColor": {
+    "message": "$1 · $2"
+  },
+  "optSubtitle": {
+    "message": "Круговое меню инструментов возле курсора — для пера и планшета"
+  },
+  "optSaved": {
+    "message": "Сохранено"
+  },
+  "optHotkeyH": {
+    "message": "Горячая клавиша"
+  },
+  "optHotkeyHint": {
+    "message": "Назначьте эту же клавишу на кнопку пера в драйвере планшета."
+  },
+  "optPressKey": {
+    "message": "Нажмите клавишу…"
+  },
+  "optCapsTitle": {
+    "message": "Caps Lock на macOS"
+  },
+  "optCapsBody": {
+    "message": "присылает нажатие через раз: первое нажатие открывает меню, второе — выбирает инструмент. Работает, но индикатор Caps будет мигать. Для варианта «нажал-подержал-отпустил» удобнее назначить на перо, например, <code>F13</code>, <code>`</code> или <code>Alt&nbsp;+&nbsp;Q</code>."
+  },
+  "optModeH": {
+    "message": "Как выбирать"
+  },
+  "optModeAuto": {
+    "message": "Авто"
+  },
+  "optModeAutoD": {
+    "message": "Держите — отпустили: выбор. Быстрый тап — меню остаётся висеть."
+  },
+  "optModeHold": {
+    "message": "Удержание"
+  },
+  "optModeHoldD": {
+    "message": "Меню живёт, только пока клавиша зажата."
+  },
+  "optModeToggle": {
+    "message": "Переключатель"
+  },
+  "optModeToggleD": {
+    "message": "Нажал — открыл, нажал ещё раз — выбрал."
+  },
+  "optFollow": {
+    "message": "Открывать возле курсора"
+  },
+  "optQuickNum": {
+    "message": "Выбор цифрами 1–9 при открытом меню"
+  },
+  "optShowKbd": {
+    "message": "Показывать буквы горячих клавиш"
+  },
+  "optKeepTool": {
+    "message": "Не сбрасывать инструмент после рисования"
+  },
+  "optKeepToolD": {
+    "message": "Включает штатный «замок» Excalidraw, чтобы инструмент не сбрасывался на «Выделение»."
+  },
+  "optColorH": {
+    "message": "Цвет"
+  },
+  "optColorHint": {
+    "message": "Задержитесь пером на секторе рисующего инструмента, не отпуская клавишу, — кольцо схлопнется в центр и оттуда расцветёт палитра. Вернулись в центр — шаг назад, к инструментам."
+  },
+  "optDwell": {
+    "message": "Задержка до палитры"
+  },
+  "optColorTarget": {
+    "message": "Что меняем"
+  },
+  "optStroke": {
+    "message": "Цвет обводки"
+  },
+  "optBackground": {
+    "message": "Цвет фона"
+  },
+  "optPaletteH": {
+    "message": "Палитра"
+  },
+  "optAddColor": {
+    "message": "Добавить цвет"
+  },
+  "optRemove": {
+    "message": "Убрать"
+  },
+  "optViewH": {
+    "message": "Вид"
+  },
+  "optRadius": {
+    "message": "Размер"
+  },
+  "optRing": {
+    "message": "Толщина кольца"
+  },
+  "optGap": {
+    "message": "Просвет секторов"
+  },
+  "optDeadzone": {
+    "message": "Мёртвая зона"
+  },
+  "optAnim": {
+    "message": "Скорость анимации"
+  },
+  "optTheme": {
+    "message": "Тема"
+  },
+  "optThemeAuto": {
+    "message": "Как в Excalidraw"
+  },
+  "optThemeLight": {
+    "message": "Светлая"
+  },
+  "optThemeDark": {
+    "message": "Тёмная"
+  },
+  "optWheelH": {
+    "message": "Колесо"
+  },
+  "optWheelHint": {
+    "message": "нажмите на сектор, чтобы поменять"
+  },
+  "optShowPalette": {
+    "message": "показать палитру"
+  },
+  "optShowTools": {
+    "message": "показать инструменты"
+  },
+  "optAddSlot": {
+    "message": "+ добавить сектор"
+  },
+  "optHintSlots": {
+    "message": "клик — сменить · перетащить — переставить"
+  },
+  "optHintColors": {
+    "message": "клик — сменить цвет · перетащить — переставить"
+  },
+  "optSlotTitle": {
+    "message": "Сектор $1 — что положить"
+  },
+  "optSecTools": {
+    "message": "Инструменты"
+  },
+  "optSecColors": {
+    "message": "Цвета из палитры"
+  },
+  "optRemoveSlot": {
+    "message": "Убрать этот сектор"
+  },
+  "optListH": {
+    "message": "Список"
+  },
+  "optListHint": {
+    "message": "То же самое списком: перетаскивайте, чтобы менять порядок. Первый пункт колеса — всегда сверху, дальше по часовой стрелке."
+  },
+  "optAdd": {
+    "message": "Добавить"
+  },
+  "optCount": {
+    "message": "$1 из 14"
+  },
+  "optReset": {
+    "message": "Сбросить всё к настройкам по умолчанию"
+  },
+  "unitPx": {
+    "message": "px"
+  },
+  "unitMs": {
+    "message": "мс"
+  },
+  "valueOff": {
+    "message": "выкл"
+  },
+  "optMouse": {
+    "message": "Открывать кнопкой мыши"
+  },
+  "optMouseOff": {
+    "message": "Выключено"
+  },
+  "optMouseRight": {
+    "message": "Правая кнопка"
+  },
+  "optMouseMiddle": {
+    "message": "Средняя кнопка"
+  },
+  "optMouseHint": {
+    "message": "Удобно без планшета: нажал, мазнул, отпустил. Правая кнопка при этом заменяет собой родное контекстное меню Excalidraw."
+  }
+}

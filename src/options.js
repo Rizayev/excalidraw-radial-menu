@@ -2,8 +2,19 @@
 (function () {
   'use strict';
   const E = window.ERM;
-  const { DEFAULTS, TOOLS, TOOL_ORDER, ICONS, CSS, IS_MAC } = E;
+  const { DEFAULTS, TOOLS, TOOL_ORDER, ICONS, CSS, IS_MAC, t } = E;
   const $ = (id) => document.getElementById(id);
+
+  /* подстановка строк из _locales/<lang>/messages.json в разметку */
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const v = t(el.dataset.i18n);
+    if (v) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+    const v = t(el.dataset.i18nHtml);
+    if (v) el.innerHTML = v;
+  });
+  document.title = t('extOptionsTitle') || document.title;
   let cfg = Object.assign({}, DEFAULTS);
   let wheel = null, saveTimer = 0, previewColors = false;
 
@@ -41,16 +52,13 @@
     wheel.wrap.style.top = '50%';
     layer.appendChild(wheel.wrap);
     wheel.setCurrent(previewColors ? E.colorId(cfg.colors[0] || '#1e1e1e') : cfg.tools[0]);
-    $('previewMode').textContent = previewColors ? 'показать инструменты' : 'показать палитру';
+    $('previewMode').textContent = t(previewColors ? 'optShowTools' : 'optShowPalette');
   }
 
   $('previewMode').addEventListener('click', () => {
     previewColors = !previewColors;
     closeSlot();
-    $('addSlot').textContent = previewColors ? '+ добавить цвет' : '+ добавить сектор';
-    $('slotHint').textContent = previewColors
-      ? 'клик — сменить цвет · перетащить — переставить'
-      : 'клик — сменить инструмент · перетащить — переставить';
+    paintBar();
     renderWheel();
   });
 
@@ -129,7 +137,7 @@
       return;
     }
     slotIdx = i;
-    $('spTitle').textContent = 'Сектор ' + (i + 1) + ' — что положить';
+    $('spTitle').textContent = t('optSlotTitle', [String(i + 1)]);
     fillGrid($('spTools'), TOOL_ORDER);
     fillGrid($('spColors'), cfg.colors.map(E.colorId));
     $('spRemove').disabled = cfg.tools.length <= 2;
@@ -177,6 +185,10 @@
     if (e.key === 'Escape' && !$('slotPicker').hidden) closeSlot();
   });
 
+  function paintBar() {
+    $('addSlot').textContent = previewColors ? t('optAddColor') : t('optAddSlot');
+    $('slotHint').textContent = t(previewColors ? 'optHintColors' : 'optHintSlots');
+  }
   function renderAll() { renderPalette(); renderTools(); renderWheel(); save(); }
 
   /* -------------------------------------------------------------- фишки */
@@ -193,7 +205,7 @@
     d.innerHTML =
       (mode === 'chosen' ? `<span class="num">${idx + 1}</span>` : '') +
       glyph + `<span>${e.label}</span>` +
-      (mode === 'chosen' ? '<button class="x" title="Убрать">✕</button>' : '');
+      (mode === 'chosen' ? `<button class="x" title="${t('optRemove')}">✕</button>` : '');
 
     if (mode === 'chosen') {
       d.draggable = true;
@@ -238,7 +250,7 @@
     const available = TOOL_ORDER.concat(cfg.colors.map(E.colorId));
     available.filter((id) => !cfg.tools.includes(id))
       .forEach((id) => pool.appendChild(chip(id, 'pool')));
-    $('count').textContent = cfg.tools.length + ' из 14';
+    $('count').textContent = t('optCount', [String(cfg.tools.length)]);
   }
 
   /* ------------------------------------------------------------- палитра */
@@ -250,7 +262,7 @@
       d.className = 'sw';
       d.draggable = true;
       d.title = E.colorName(hex);
-      d.innerHTML = `<input type="color" value="${hex}"><button class="x" title="Убрать">✕</button>`;
+      d.innerHTML = `<input type="color" value="${hex}"><button class="x" title="${t('optRemove')}">✕</button>`;
       d.querySelector('input').addEventListener('input', (e) => {
         cfg.colors[i] = e.target.value.toLowerCase();
         renderTools(); renderWheel(); save();
@@ -281,7 +293,7 @@
       const add = document.createElement('button');
       add.className = 'sw-add';
       add.textContent = '+';
-      add.title = 'Добавить цвет';
+      add.title = t('optAddColor');
       add.addEventListener('click', () => {
         cfg.colors.push('#868e96');
         renderPalette(); renderTools(); renderWheel(); save();
@@ -294,7 +306,7 @@
   let recording = false;
   const hk = $('hotkey');
   function paintHotkey() {
-    hk.textContent = recording ? 'Нажмите клавишу…' : E.triggerLabel(cfg.trigger);
+    hk.textContent = recording ? t('optPressKey') : E.triggerLabel(cfg.trigger);
     hk.classList.toggle('rec', recording);
     $('capsWarn').hidden = !(cfg.trigger.code === 'CapsLock' && IS_MAC);
   }
@@ -314,13 +326,14 @@
   }, true);
 
   /* --------------------------------------------------------------- поля */
+  const PX = () => ' ' + t('unitPx'), MS = () => ' ' + t('unitMs'), OFF = () => t('valueOff');
   const SLIDERS = [
-    ['radius', 'radiusV', (v) => v, (v) => v + ' px'],
+    ['radius', 'radiusV', (v) => v, (v) => v + PX()],
     ['innerRatio', 'innerV', (v) => v / 100, (v) => (100 - v) + ' %'],
-    ['gapPx', 'gapV', (v) => v, (v) => v + ' px'],
-    ['deadzone', 'deadV', (v) => v, (v) => v + ' px'],
-    ['animSpeed', 'animV', (v) => v / 10, (v) => (v === 0 ? 'выкл' : '×' + (v / 10).toFixed(1))],
-    ['dwellMs', 'dwellV', (v) => v, (v) => (v === 0 ? 'выкл' : v + ' мс')]
+    ['gapPx', 'gapV', (v) => v, (v) => v + PX()],
+    ['deadzone', 'deadV', (v) => v, (v) => v + PX()],
+    ['animSpeed', 'animV', (v) => v / 10, (v) => (v === 0 ? OFF() : '×' + (v / 10).toFixed(1))],
+    ['dwellMs', 'dwellV', (v) => v, (v) => (v === 0 ? OFF() : v + MS())]
   ];
   const rawOf = (key) => key === 'innerRatio' ? Math.round(cfg[key] * 100)
     : key === 'animSpeed' ? Math.round(cfg[key] * 10) : cfg[key];
@@ -332,9 +345,10 @@
       $(out).textContent = fmt(raw);
     });
     document.querySelectorAll('input[name=mode]').forEach((r) => { r.checked = r.value === cfg.mode; });
-    ['followCursor', 'quickNumbers', 'showKbd'].forEach((k) => { $(k).checked = !!cfg[k]; });
+    ['followCursor', 'quickNumbers', 'showKbd', 'keepTool'].forEach((k) => { $(k).checked = !!cfg[k]; });
     $('theme').value = cfg.theme;
     $('colorTarget').value = cfg.colorTarget;
+    $('mouseTrigger').value = cfg.mouseTrigger;
     paintHotkey();
   }
 
@@ -348,10 +362,11 @@
   });
   document.querySelectorAll('input[name=mode]').forEach((r) =>
     r.addEventListener('change', () => { cfg.mode = r.value; save(); }));
-  ['followCursor', 'quickNumbers', 'showKbd'].forEach((k) =>
+  ['followCursor', 'quickNumbers', 'showKbd', 'keepTool'].forEach((k) =>
     $(k).addEventListener('change', (e) => { cfg[k] = e.target.checked; renderWheel(); save(); }));
   $('theme').addEventListener('change', (e) => { cfg.theme = e.target.value; renderWheel(); save(); });
   $('colorTarget').addEventListener('change', (e) => { cfg.colorTarget = e.target.value; save(); });
+  $('mouseTrigger').addEventListener('change', (e) => { cfg.mouseTrigger = e.target.value; save(); });
   $('reset').addEventListener('click', () => {
     cfg = JSON.parse(JSON.stringify(DEFAULTS));
     chrome.storage.sync.set(cfg);
@@ -364,6 +379,6 @@
     if (!Array.isArray(cfg.tools) || !cfg.tools.length) cfg.tools = DEFAULTS.tools.slice();
     if (!Array.isArray(cfg.colors) || !cfg.colors.length) cfg.colors = DEFAULTS.colors.slice();
     cfg.tools = cfg.tools.filter((id) => TOOLS[id] || E.isColorId(id));
-    paint(); renderPalette(); renderTools(); renderWheel();
+    paintBar(); paint(); renderPalette(); renderTools(); renderWheel();
   });
 })();

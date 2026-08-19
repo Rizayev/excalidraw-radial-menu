@@ -1,0 +1,329 @@
+{
+  "extName": {
+    "message": "Excalidraw Radial Menu"
+  },
+  "extDesc": {
+    "message": "A radial tool menu that pops up right under the cursor in Excalidraw. Built for pens and graphics tablets."
+  },
+  "extOptionsTitle": {
+    "message": "Excalidraw Radial Menu — settings"
+  },
+  "tool_freedraw": {
+    "message": "Draw"
+  },
+  "tool_eraser": {
+    "message": "Eraser"
+  },
+  "tool_selection": {
+    "message": "Selection"
+  },
+  "tool_lasso": {
+    "message": "Lasso"
+  },
+  "tool_hand": {
+    "message": "Hand"
+  },
+  "tool_rectangle": {
+    "message": "Rectangle"
+  },
+  "tool_diamond": {
+    "message": "Diamond"
+  },
+  "tool_ellipse": {
+    "message": "Ellipse"
+  },
+  "tool_arrow": {
+    "message": "Arrow"
+  },
+  "tool_line": {
+    "message": "Line"
+  },
+  "tool_text": {
+    "message": "Text"
+  },
+  "tool_image": {
+    "message": "Image"
+  },
+  "tool_frame": {
+    "message": "Frame"
+  },
+  "tool_laser": {
+    "message": "Laser pointer"
+  },
+  "tool_bucketfill": {
+    "message": "Bucket fill"
+  },
+  "tool_autoshape": {
+    "message": "Draw to shape"
+  },
+  "tool_embeddable": {
+    "message": "Web embed"
+  },
+  "tool_undo": {
+    "message": "Undo"
+  },
+  "tool_redo": {
+    "message": "Redo"
+  },
+  "tool_del": {
+    "message": "Delete"
+  },
+  "tool_duplicate": {
+    "message": "Duplicate"
+  },
+  "tool_group": {
+    "message": "Group"
+  },
+  "tool_zoomfit": {
+    "message": "Zoom to fit"
+  },
+  "color_1e1e1e": {
+    "message": "Black"
+  },
+  "color_343a40": {
+    "message": "Dark gray"
+  },
+  "color_868e96": {
+    "message": "Gray"
+  },
+  "color_ffffff": {
+    "message": "White"
+  },
+  "color_e03131": {
+    "message": "Red"
+  },
+  "color_c2255c": {
+    "message": "Pink"
+  },
+  "color_9c36b5": {
+    "message": "Purple"
+  },
+  "color_6741d9": {
+    "message": "Violet"
+  },
+  "color_3b5bdb": {
+    "message": "Indigo"
+  },
+  "color_1971c2": {
+    "message": "Blue"
+  },
+  "color_0c8599": {
+    "message": "Teal"
+  },
+  "color_099268": {
+    "message": "Emerald"
+  },
+  "color_2f9e44": {
+    "message": "Green"
+  },
+  "color_66a80f": {
+    "message": "Lime"
+  },
+  "color_f08c00": {
+    "message": "Orange"
+  },
+  "color_e8590c": {
+    "message": "Carrot"
+  },
+  "color_846358": {
+    "message": "Brown"
+  },
+  "color_transparent": {
+    "message": "Transparent"
+  },
+  "wheelCancel": {
+    "message": "Cancel"
+  },
+  "wheelKeepColor": {
+    "message": "$1 · keep color"
+  },
+  "wheelToolAndColor": {
+    "message": "$1 · $2"
+  },
+  "optSubtitle": {
+    "message": "Radial tool menu at the cursor — for pens and tablets"
+  },
+  "optSaved": {
+    "message": "Saved"
+  },
+  "optHotkeyH": {
+    "message": "Hotkey"
+  },
+  "optHotkeyHint": {
+    "message": "Map the same key to a pen button in your tablet driver."
+  },
+  "optPressKey": {
+    "message": "Press a key…"
+  },
+  "optCapsTitle": {
+    "message": "Caps Lock on macOS"
+  },
+  "optCapsBody": {
+    "message": "fires every other press: the first press opens the menu, the second one picks. It works, but the Caps indicator will blink. For a press-hold-release flow, map the pen to something like <code>F13</code>, <code>`</code> or <code>Alt&nbsp;+&nbsp;Q</code> instead."
+  },
+  "optModeH": {
+    "message": "How to pick"
+  },
+  "optModeAuto": {
+    "message": "Auto"
+  },
+  "optModeAutoD": {
+    "message": "Hold and release to pick. A quick tap leaves the menu open."
+  },
+  "optModeHold": {
+    "message": "Hold"
+  },
+  "optModeHoldD": {
+    "message": "The menu lives only while the key is held."
+  },
+  "optModeToggle": {
+    "message": "Toggle"
+  },
+  "optModeToggleD": {
+    "message": "First press opens, second one picks."
+  },
+  "optFollow": {
+    "message": "Open at the cursor"
+  },
+  "optQuickNum": {
+    "message": "Pick with 1–9 while the menu is open"
+  },
+  "optShowKbd": {
+    "message": "Show shortcut letters"
+  },
+  "optKeepTool": {
+    "message": "Keep the tool active after drawing"
+  },
+  "optKeepToolD": {
+    "message": "Turns on Excalidraw's own lock, so the tool is not reset to Selection."
+  },
+  "optColorH": {
+    "message": "Color"
+  },
+  "optColorHint": {
+    "message": "Hold the pen still on a drawing tool's sector without releasing the key — the ring collapses into the centre and a palette blooms out of it. Move back to the centre to step back to the tools."
+  },
+  "optDwell": {
+    "message": "Hold before the palette"
+  },
+  "optColorTarget": {
+    "message": "What to change"
+  },
+  "optStroke": {
+    "message": "Stroke color"
+  },
+  "optBackground": {
+    "message": "Background color"
+  },
+  "optPaletteH": {
+    "message": "Palette"
+  },
+  "optAddColor": {
+    "message": "Add a color"
+  },
+  "optRemove": {
+    "message": "Remove"
+  },
+  "optViewH": {
+    "message": "Look"
+  },
+  "optRadius": {
+    "message": "Size"
+  },
+  "optRing": {
+    "message": "Ring thickness"
+  },
+  "optGap": {
+    "message": "Sector gap"
+  },
+  "optDeadzone": {
+    "message": "Dead zone"
+  },
+  "optAnim": {
+    "message": "Animation speed"
+  },
+  "optTheme": {
+    "message": "Theme"
+  },
+  "optThemeAuto": {
+    "message": "Same as Excalidraw"
+  },
+  "optThemeLight": {
+    "message": "Light"
+  },
+  "optThemeDark": {
+    "message": "Dark"
+  },
+  "optWheelH": {
+    "message": "Wheel"
+  },
+  "optWheelHint": {
+    "message": "click a sector to change it"
+  },
+  "optShowPalette": {
+    "message": "show palette"
+  },
+  "optShowTools": {
+    "message": "show tools"
+  },
+  "optAddSlot": {
+    "message": "+ add sector"
+  },
+  "optHintSlots": {
+    "message": "click — change · drag — reorder"
+  },
+  "optHintColors": {
+    "message": "click — change color · drag — reorder"
+  },
+  "optSlotTitle": {
+    "message": "Sector $1 — what goes here"
+  },
+  "optSecTools": {
+    "message": "Tools"
+  },
+  "optSecColors": {
+    "message": "Colors from the palette"
+  },
+  "optRemoveSlot": {
+    "message": "Remove this sector"
+  },
+  "optListH": {
+    "message": "List"
+  },
+  "optListHint": {
+    "message": "The same thing as a list: drag to reorder. The first item is always at the top of the wheel, the rest go clockwise."
+  },
+  "optAdd": {
+    "message": "Add"
+  },
+  "optCount": {
+    "message": "$1 of 14"
+  },
+  "optReset": {
+    "message": "Reset everything to defaults"
+  },
+  "unitPx": {
+    "message": "px"
+  },
+  "unitMs": {
+    "message": "ms"
+  },
+  "valueOff": {
+    "message": "off"
+  },
+  "optMouse": {
+    "message": "Open with a mouse button"
+  },
+  "optMouseOff": {
+    "message": "Off"
+  },
+  "optMouseRight": {
+    "message": "Right button"
+  },
+  "optMouseMiddle": {
+    "message": "Middle button"
+  },
+  "optMouseHint": {
+    "message": "Handy without a tablet: press, flick, release. The right button replaces Excalidraw's own context menu while this is on."
+  }
+}

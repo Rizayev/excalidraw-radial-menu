@@ -62,8 +62,8 @@ main{
 .warn code{background:rgba(0,0,0,.09); padding:1px 5px; border-radius:4px; font-size:12px}
 
 .row{display:flex; align-items:center; gap:10px; padding:7px 0; cursor:pointer}
-.row.radio span{display:flex; flex-direction:column}
-.row.radio i{font-style:normal; color:var(--dim); font-size:12.5px; margin-top:1px}
+.row>span{display:flex; flex-direction:column}
+.row i{font-style:normal; color:var(--dim); font-size:12.5px; margin-top:1px}
 .row input[type=radio],.row input[type=checkbox]{accent-color:var(--accent); width:16px; height:16px; margin:0; flex:0 0 auto}
 .row.slider{display:grid; grid-template-columns:225px 1fr; gap:14px; cursor:default}
 .row.slider>span{display:flex; justify-content:space-between; gap:10px; color:var(--ink)}
@@ -181,3 +181,5 @@ select{
   border:1px solid var(--line); background:transparent; color:var(--dim);
 }
 .sp-remove:hover{color:#e2484d; border-color:#e2484d}
+
+.hint.sub{margin:2px 0 10px; font-size:12px}
