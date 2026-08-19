@@ -66,7 +66,7 @@ main{
 .row i{font-style:normal; color:var(--dim); font-size:12.5px; margin-top:1px}
 .row input[type=radio],.row input[type=checkbox]{accent-color:var(--accent); width:16px; height:16px; margin:0; flex:0 0 auto}
 .row.slider{display:grid; grid-template-columns:225px 1fr; gap:14px; cursor:default}
-.row.slider>span{display:flex; justify-content:space-between; gap:10px; color:var(--ink)}
+.row.slider>span{display:flex; flex-direction:row; align-items:baseline; justify-content:space-between; gap:10px; color:var(--ink)}
 .row.slider em{font-style:normal; color:var(--dim); font-variant-numeric:tabular-nums; white-space:nowrap}
 input[type=range]{accent-color:var(--accent); width:100%}
 select{
@@ -183,3 +183,40 @@ select{
 .sp-remove:hover{color:#e2484d; border-color:#e2484d}
 
 .hint.sub{margin:2px 0 10px; font-size:12px}
+
+.top-right{display:flex; align-items:center; gap:12px}
+.lang-sel{
+  background:var(--card); color:var(--dim); border:1px solid var(--line);
+  border-radius:999px; padding:5px 10px; font:inherit; font-size:12.5px; cursor:pointer;
+}
+.lang-sel:hover{color:var(--ink); border-color:var(--accent)}
+
+.tabbed{padding-top:6px}
+.tabs{display:flex; gap:2px; margin:0 -20px 16px; padding:0 14px;
+  border-bottom:1px solid var(--line)}
+.tab{
+  display:inline-flex; align-items:center; gap:7px;
+  border:0; background:none; font:inherit; font-size:13px; font-weight:600; color:var(--dim);
+  padding:9px 11px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
+  transition:color .12s, border-color .12s;
+}
+.tab svg{
+  width:15px; height:15px; flex:0 0 auto; fill:none; stroke:currentColor;
+  stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;
+}
+.tab:hover{color:var(--ink)}
+.tab.is-on{color:var(--accent); border-bottom-color:var(--accent)}
+.tabpanel{display:none; animation:tab-in .16s ease both}
+.tabpanel.is-on{display:block}
+@keyframes tab-in{from{opacity:0; transform:translateY(3px)}to{opacity:1; transform:none}}
+.panel-foot{display:flex; justify-content:flex-end; margin-top:16px}
+.panel-foot .ghost{margin-left:0}
+
+/* длинная подпись слайдера переносится сама, значение остаётся на первой строке */
+.row.slider>span>span:first-child{flex:1; min-width:0}
+.tabpanel .hint small{color:var(--dim); font-weight:600}
+.tabpanel .reset{margin-top:16px}
+
+/* строки с двухстрочным описанием: галку выравниваем по первой строке */
+.row.check:has(i){align-items:flex-start}
+.row.check:has(i) input{margin-top:2px}

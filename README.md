@@ -126,10 +126,13 @@ Plus any colors from your palette.
 
 ## Languages
 
-Every visible string lives in `_locales/<lang>/messages.json`; `en` is the default. To add a
-language, copy `_locales/en` to `_locales/<your-lang>`, translate the `message` values and
-reload the extension — Chrome picks the folder matching the browser UI language on its own.
-Nothing else needs touching.
+The language is chosen in the header of the settings page: **Same as the browser** (the
+default), **English** or **Русский**.
+
+Every visible string lives in `_locales/<lang>/messages.json`; `en` is the fallback. To add a
+language, copy `_locales/en` to `_locales/<your-lang>`, translate the `message` values, and add
+one line to the `LOCALES` array in `src/common.js` so it shows up in the picker. That is all —
+no other code is involved.
 
 ## How it works
 

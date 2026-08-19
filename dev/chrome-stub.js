@@ -30,5 +30,17 @@
     },
     onChanged: { addListener() {} }
   };
-  chrome.runtime = { openOptionsPage() {} };
+  chrome.runtime = {
+    openOptionsPage() {},
+    getURL: (path) => '../' + path.replace(/^\//, ''),
+    lastError: null,
+    sendMessage(msg, cb) {
+      if (!msg || msg.type !== 'erm-locale') return;
+      fetch('../_locales/' + msg.lang + '/messages.json')
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => cb && cb(d))
+        .catch(() => cb && cb(null));
+    },
+    onMessage: { addListener() {} }
+  };
 })();

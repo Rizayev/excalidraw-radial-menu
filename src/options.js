@@ -6,15 +6,63 @@
   const $ = (id) => document.getElementById(id);
 
   /* подстановка строк из _locales/<lang>/messages.json в разметку */
-  document.querySelectorAll('[data-i18n]').forEach((el) => {
-    const v = t(el.dataset.i18n);
-    if (v) el.textContent = v;
+  function localizeDom() {
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const v = t(el.dataset.i18n);
+      if (v) el.textContent = v;
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+      const v = t(el.dataset.i18nHtml);
+      if (v) el.innerHTML = v;
+    });
+    document.title = t('extOptionsTitle') || document.title;
+  }
+
+  /* язык: 'auto' — как в браузере, иначе читаем словарь из папки расширения */
+  function applyLang(lang) {
+    if (!lang || lang === 'auto') {
+      E.setMessages(null);
+      return Promise.resolve();
+    }
+    return fetch(chrome.runtime.getURL('_locales/' + lang + '/messages.json'))
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => E.setMessages(d))
+      .catch(() => E.setMessages(null));
+  }
+
+  function fillLangSelect() {
+    const sel = $('lang');
+    sel.textContent = '';
+    const auto = new Option(t('optLangAuto') || 'Auto', 'auto');
+    sel.appendChild(auto);
+    E.LOCALES.forEach((l) => sel.appendChild(new Option(l.name, l.code)));
+    sel.value = cfg.lang;
+  }
+
+  /* табы в левой колонке; активный храним явно, чтобы перерисовки его не сбивали */
+  let activeTab = 'pick';
+  function setTab(name) {
+    activeTab = name;
+    document.querySelectorAll('.tab').forEach((b) => b.classList.toggle('is-on', b.dataset.tab === name));
+    document.querySelectorAll('.tabpanel').forEach((p) => p.classList.toggle('is-on', p.dataset.tab === name));
+  }
+
+  const TAB_ICONS = { pick: 'gesture', color: 'palette', view: 'sliders', list: 'list' };
+  document.querySelectorAll('.tab').forEach((btn) => {
+    const ic = ICONS[TAB_ICONS[btn.dataset.tab]];
+    if (ic) btn.insertAdjacentHTML('afterbegin', '<svg viewBox="0 0 24 24">' + ic + '</svg>');
   });
-  document.querySelectorAll('[data-i18n-html]').forEach((el) => {
-    const v = t(el.dataset.i18nHtml);
-    if (v) el.innerHTML = v;
+  document.querySelectorAll('.tab').forEach((btn) => {
+    btn.addEventListener('click', () => setTab(btn.dataset.tab));
   });
-  document.title = t('extOptionsTitle') || document.title;
+
+  function repaintAll() {
+    localizeDom(); fillLangSelect(); setTab(activeTab); paintBar(); paint();
+    renderPalette(); renderTools(); renderWheel();
+    if (!$('slotPicker').hidden && slotIdx >= 0) openSlot(slotIdx);   // и её содержимое тоже
+  }
+
+  localizeDom();
   let cfg = Object.assign({}, DEFAULTS);
   let wheel = null, saveTimer = 0, previewColors = false;
 
@@ -367,6 +415,18 @@
   $('theme').addEventListener('change', (e) => { cfg.theme = e.target.value; renderWheel(); save(); });
   $('colorTarget').addEventListener('change', (e) => { cfg.colorTarget = e.target.value; save(); });
   $('mouseTrigger').addEventListener('change', (e) => { cfg.mouseTrigger = e.target.value; save(); });
+  $('lang').addEventListener('change', (e) => {
+    cfg.lang = e.target.value;
+    save();
+    applyLang(cfg.lang).then(repaintAll);
+  });
+  // сброс только внешнего вида: геометрия, анимация, тема. Язык и состав колеса не трогаем
+  const VIEW_KEYS = ['radius', 'innerRatio', 'gapPx', 'deadzone', 'animSpeed', 'theme'];
+  $('resetView').addEventListener('click', () => {
+    VIEW_KEYS.forEach((k) => { cfg[k] = DEFAULTS[k]; });
+    paint(); renderWheel(); save();
+  });
+
   $('reset').addEventListener('click', () => {
     cfg = JSON.parse(JSON.stringify(DEFAULTS));
     chrome.storage.sync.set(cfg);
@@ -379,6 +439,6 @@
     if (!Array.isArray(cfg.tools) || !cfg.tools.length) cfg.tools = DEFAULTS.tools.slice();
     if (!Array.isArray(cfg.colors) || !cfg.colors.length) cfg.colors = DEFAULTS.colors.slice();
     cfg.tools = cfg.tools.filter((id) => TOOLS[id] || E.isColorId(id));
-    paintBar(); paint(); renderPalette(); renderTools(); renderWheel();
+    applyLang(cfg.lang).then(repaintAll);
   });
 })();

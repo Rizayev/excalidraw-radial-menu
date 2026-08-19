@@ -288,7 +288,7 @@
     "message": "Remove this sector"
   },
   "optListH": {
-    "message": "List"
+    "message": "Tools list"
   },
   "optListHint": {
     "message": "The same thing as a list: drag to reorder. The first item is always at the top of the wheel, the rest go clockwise."
@@ -325,5 +325,14 @@
   },
   "optMouseHint": {
     "message": "Handy without a tablet: press, flick, release. The right button replaces Excalidraw's own context menu while this is on."
+  },
+  "optLang": {
+    "message": "Language"
+  },
+  "optLangAuto": {
+    "message": "Same as the browser"
+  },
+  "optResetView": {
+    "message": "Reset look"
   }
 }

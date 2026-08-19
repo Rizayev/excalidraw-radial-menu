@@ -6,9 +6,25 @@
   const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform) || /Mac/.test(navigator.userAgent);
 
   /* Все видимые строки живут в _locales/<lang>/messages.json.
-     Чтобы добавить язык, достаточно положить рядом ещё одну папку с messages.json. */
+     Чтобы добавить язык: положить рядом ещё одну папку с messages.json
+     и дописать её код в LOCALES ниже. */
+  const LOCALES = [
+    { code: 'en', name: 'English' },
+    { code: 'ru', name: 'Русский' }
+  ];
+
+  // null — берём язык у браузера через chrome.i18n; иначе загруженный вручную словарь
+  let MESSAGES = null;
+  const setMessages = (map) => { MESSAGES = map || null; };
+
   const t = (key, subs) => {
-    try { return chrome.i18n.getMessage(key, subs) || ''; } catch (e) { return ''; }
+    const list = subs == null ? [] : (Array.isArray(subs) ? subs : [subs]);
+    if (MESSAGES) {
+      const m = MESSAGES[key] && MESSAGES[key].message;
+      if (!m) return '';
+      return m.replace(/\$(\d)/g, (_, i) => (list[i - 1] != null ? list[i - 1] : ''));
+    }
+    try { return chrome.i18n.getMessage(key, list) || ''; } catch (e) { return ''; }
   };
 
   /* ------------------------------------------------------------------ иконки
@@ -38,7 +54,10 @@
     duplicate: '<rect x="8" y="8" width="12" height="12" rx="2.4"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
     group: '<rect x="4" y="4" width="7" height="7" rx="1.4"/><rect x="13" y="13" width="7" height="7" rx="1.4"/><path d="M11 7.5h3.5A1.5 1.5 0 0 1 16 9v4"/>',
     palette: '<path d="M12 21a9 9 0 1 1 9-9c0 1.7-1.3 3-3 3h-1.5a2 2 0 0 0-1.4 3.4A2 2 0 0 1 12 21z"/><circle cx="7.5" cy="12" r="1.1"/><circle cx="9.8" cy="7.8" r="1.1"/><circle cx="14.4" cy="7.6" r="1.1"/>',
-    cross: '<path d="M6 6l12 12"/><path d="M18 6 6 18"/>'
+    cross: '<path d="M6 6l12 12"/><path d="M18 6 6 18"/>',
+    gesture: '<path d="M4.6 4.2 10 17.4l1.7-5.7 5.7-1.7z"/><path d="M15.4 4.7a6.6 6.6 0 0 1 3.9 3.9"/><path d="M14 1.8a9.8 9.8 0 0 1 8.2 8.2"/>',
+    sliders: '<path d="M3.5 8h9"/><path d="M18.5 8h2"/><circle cx="15.5" cy="8" r="2.4"/><path d="M3.5 16h3"/><path d="M12.5 16h8"/><circle cx="9.5" cy="16" r="2.4"/>',
+    list: '<path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M4.4 6h.01"/><path d="M4.4 12h.01"/><path d="M4.4 18h.01"/>'
   };
 
   /* ------------------------------------------------------- список действий
@@ -71,8 +90,6 @@
     zoomfit:    { icon: 'zoomfit',    kbd: '⇧1', key: '!', code: 'Digit1', keyCode: 49, shift: true }
   };
 
-  Object.keys(TOOLS).forEach((id) => { TOOLS[id].label = t('tool_' + id) || id; });
-
   const TOOL_ORDER = ['freedraw', 'eraser', 'selection', 'lasso', 'hand', 'rectangle', 'diamond', 'ellipse',
     'arrow', 'line', 'text', 'image', 'frame', 'laser', 'bucketfill', 'autoshape', 'embeddable',
     'undo', 'redo', 'del', 'duplicate', 'group', 'zoomfit'];
@@ -95,9 +112,12 @@
       const hex = colorOf(id);
       return { id, label: colorName(hex), kbd: '', color: hex, isColor: true };
     }
-    const t = TOOLS[id];
-    if (!t) return null;
-    return { id, label: t.label, kbd: t.kbd, icon: t.icon, colorable: !!t.colorable };
+    const tool = TOOLS[id];
+    if (!tool) return null;
+    return {
+      id, kbd: tool.kbd, icon: tool.icon, colorable: !!tool.colorable,
+      label: t('tool_' + id) || id
+    };
   }
   const entriesFor = (ids) => (ids || []).map(entryFor).filter(Boolean);
   const colorEntries = (colors) => (colors && colors.length ? colors : DEFAULT_COLORS).map((h) => entryFor(colorId(h)));
@@ -118,6 +138,7 @@
     deadzone: 34,
     animSpeed: 1,              // 0 = без анимации
     theme: 'auto',             // auto | dark | light
+    lang: 'auto',              // auto | en | ru — auto = язык браузера
     showKbd: true,
     followCursor: true,
     closeOnSelect: true,
@@ -535,7 +556,7 @@
 }`;
 
   root.ERM = {
-    ICONS, TOOLS, TOOL_ORDER, DEFAULTS, DEFAULT_COLORS, CSS, IS_MAC, t,
+    ICONS, TOOLS, TOOL_ORDER, DEFAULTS, DEFAULT_COLORS, CSS, IS_MAC, t, LOCALES, setMessages,
     buildWheel, entryFor, entriesFor, colorEntries, colorName, colorId, colorOf, isColorId,
     triggerMatches, triggerLabel, keyName
   };

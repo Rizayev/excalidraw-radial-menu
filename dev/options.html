@@ -20,7 +20,10 @@
       <p data-i18n="optSubtitle"></p>
     </div>
   </div>
-  <span class="saved" id="saved" data-i18n="optSaved"></span>
+  <div class="top-right">
+    <span class="saved" id="saved" data-i18n="optSaved"></span>
+    <select id="lang" class="lang-sel" aria-label="Language"></select>
+  </div>
 </header>
 
 <main>
@@ -34,60 +37,77 @@
       </div>
     </div>
 
-    <div class="card">
-      <h2 data-i18n="optModeH"></h2>
-      <label class="row radio"><input type="radio" name="mode" value="auto">
-        <span><b data-i18n="optModeAuto"></b><i data-i18n="optModeAutoD"></i></span></label>
-      <label class="row radio"><input type="radio" name="mode" value="hold">
-        <span><b data-i18n="optModeHold"></b><i data-i18n="optModeHoldD"></i></span></label>
-      <label class="row radio"><input type="radio" name="mode" value="toggle">
-        <span><b data-i18n="optModeToggle"></b><i data-i18n="optModeToggleD"></i></span></label>
-      <label class="row slider"><span data-i18n="optMouse"></span>
-        <select id="mouseTrigger">
-          <option value="off" data-i18n="optMouseOff"></option>
-          <option value="right" data-i18n="optMouseRight"></option>
-          <option value="middle" data-i18n="optMouseMiddle"></option>
-        </select></label>
-      <p class="hint sub" data-i18n="optMouseHint"></p>
-      <label class="row check"><input type="checkbox" id="keepTool">
-        <span><b data-i18n="optKeepTool"></b><i data-i18n="optKeepToolD"></i></span></label>
-      <label class="row check"><input type="checkbox" id="followCursor"><span data-i18n="optFollow"></span></label>
-      <label class="row check"><input type="checkbox" id="quickNumbers"><span data-i18n="optQuickNum"></span></label>
-      <label class="row check"><input type="checkbox" id="showKbd"><span data-i18n="optShowKbd"></span></label>
-    </div>
+    <div class="card tabbed">
+      <div class="tabs" role="tablist">
+        <button class="tab is-on" data-tab="pick"><span data-i18n="optModeH"></span></button>
+        <button class="tab" data-tab="color"><span data-i18n="optColorH"></span></button>
+        <button class="tab" data-tab="view"><span data-i18n="optViewH"></span></button>
+        <button class="tab" data-tab="list"><span data-i18n="optListH"></span></button>
+      </div>
 
-    <div class="card">
-      <h2 data-i18n="optColorH"></h2>
-      <p class="hint" data-i18n="optColorHint"></p>
-      <label class="row slider"><span><span data-i18n="optDwell"></span><em id="dwellV"></em></span>
-        <input type="range" id="dwellMs" min="0" max="800" step="25"></label>
-      <label class="row slider"><span data-i18n="optColorTarget"></span>
-        <select id="colorTarget">
-          <option value="stroke" data-i18n="optStroke"></option>
-          <option value="background" data-i18n="optBackground"></option>
-        </select></label>
-      <h3 data-i18n="optPaletteH"></h3>
-      <div class="swatches" id="palette"></div>
-    </div>
+      <div class="tabpanel is-on" data-tab="pick">
+        <label class="row radio"><input type="radio" name="mode" value="auto">
+          <span><b data-i18n="optModeAuto"></b><i data-i18n="optModeAutoD"></i></span></label>
+        <label class="row radio"><input type="radio" name="mode" value="hold">
+          <span><b data-i18n="optModeHold"></b><i data-i18n="optModeHoldD"></i></span></label>
+        <label class="row radio"><input type="radio" name="mode" value="toggle">
+          <span><b data-i18n="optModeToggle"></b><i data-i18n="optModeToggleD"></i></span></label>
+        <label class="row slider"><span data-i18n="optMouse"></span>
+          <select id="mouseTrigger">
+            <option value="off" data-i18n="optMouseOff"></option>
+            <option value="right" data-i18n="optMouseRight"></option>
+            <option value="middle" data-i18n="optMouseMiddle"></option>
+          </select></label>
+        <p class="hint sub" data-i18n="optMouseHint"></p>
+        <label class="row check"><input type="checkbox" id="keepTool">
+          <span><b data-i18n="optKeepTool"></b><i data-i18n="optKeepToolD"></i></span></label>
+        <label class="row check"><input type="checkbox" id="followCursor"><span data-i18n="optFollow"></span></label>
+        <label class="row check"><input type="checkbox" id="quickNumbers"><span data-i18n="optQuickNum"></span></label>
+        <label class="row check"><input type="checkbox" id="showKbd"><span data-i18n="optShowKbd"></span></label>
+      </div>
 
-    <div class="card">
-      <h2 data-i18n="optViewH"></h2>
-      <label class="row slider"><span><span data-i18n="optRadius"></span><em id="radiusV"></em></span>
-        <input type="range" id="radius" min="80" max="190" step="2"></label>
-      <label class="row slider"><span><span data-i18n="optRing"></span><em id="innerV"></em></span>
-        <input type="range" id="innerRatio" min="25" max="62" step="1"></label>
-      <label class="row slider"><span><span data-i18n="optGap"></span><em id="gapV"></em></span>
-        <input type="range" id="gapPx" min="0" max="20" step="1"></label>
-      <label class="row slider"><span><span data-i18n="optDeadzone"></span><em id="deadV"></em></span>
-        <input type="range" id="deadzone" min="0" max="80" step="2"></label>
-      <label class="row slider"><span><span data-i18n="optAnim"></span><em id="animV"></em></span>
-        <input type="range" id="animSpeed" min="0" max="25" step="1"></label>
-      <label class="row slider"><span data-i18n="optTheme"></span>
-        <select id="theme">
-          <option value="auto" data-i18n="optThemeAuto"></option>
-          <option value="light" data-i18n="optThemeLight"></option>
-          <option value="dark" data-i18n="optThemeDark"></option>
-        </select></label>
+      <div class="tabpanel" data-tab="color">
+        <p class="hint" data-i18n="optColorHint"></p>
+        <label class="row slider"><span><span data-i18n="optDwell"></span><em id="dwellV"></em></span>
+          <input type="range" id="dwellMs" min="0" max="800" step="25"></label>
+        <label class="row slider"><span data-i18n="optColorTarget"></span>
+          <select id="colorTarget">
+            <option value="stroke" data-i18n="optStroke"></option>
+            <option value="background" data-i18n="optBackground"></option>
+          </select></label>
+        <h3 data-i18n="optPaletteH"></h3>
+        <div class="swatches" id="palette"></div>
+      </div>
+
+      <div class="tabpanel" data-tab="view">
+        <label class="row slider"><span><span data-i18n="optRadius"></span><em id="radiusV"></em></span>
+          <input type="range" id="radius" min="80" max="190" step="2"></label>
+        <label class="row slider"><span><span data-i18n="optRing"></span><em id="innerV"></em></span>
+          <input type="range" id="innerRatio" min="25" max="62" step="1"></label>
+        <label class="row slider"><span><span data-i18n="optGap"></span><em id="gapV"></em></span>
+          <input type="range" id="gapPx" min="0" max="20" step="1"></label>
+        <label class="row slider"><span><span data-i18n="optDeadzone"></span><em id="deadV"></em></span>
+          <input type="range" id="deadzone" min="0" max="80" step="2"></label>
+        <label class="row slider"><span><span data-i18n="optAnim"></span><em id="animV"></em></span>
+          <input type="range" id="animSpeed" min="0" max="25" step="1"></label>
+        <label class="row slider"><span data-i18n="optTheme"></span>
+          <select id="theme">
+            <option value="auto" data-i18n="optThemeAuto"></option>
+            <option value="light" data-i18n="optThemeLight"></option>
+            <option value="dark" data-i18n="optThemeDark"></option>
+          </select></label>
+        <div class="panel-foot">
+          <button class="ghost" id="resetView" data-i18n="optResetView"></button>
+        </div>
+      </div>
+
+      <div class="tabpanel" data-tab="list">
+        <p class="hint"><span data-i18n="optListHint"></span> <small id="count"></small></p>
+        <div class="chips" id="chosen"></div>
+        <h3 data-i18n="optAdd"></h3>
+        <div class="chips pool" id="pool"></div>
+        <button class="reset" id="reset" data-i18n="optReset"></button>
+      </div>
     </div>
   </section>
 
@@ -109,15 +129,6 @@
         <button class="ghost" id="addSlot"></button>
         <span class="bar-hint" id="slotHint"></span>
       </div>
-    </div>
-
-    <div class="card">
-      <h2><span data-i18n="optListH"></span> <small id="count"></small></h2>
-      <p class="hint" data-i18n="optListHint"></p>
-      <div class="chips" id="chosen"></div>
-      <h3 data-i18n="optAdd"></h3>
-      <div class="chips pool" id="pool"></div>
-      <button class="reset" id="reset" data-i18n="optReset"></button>
     </div>
   </section>
 </main>

@@ -30,10 +30,25 @@
   const mouseBtn = () => MOUSE_BTN[cfg.mouseTrigger];   // undefined, если выключено
 
   /* ------------------------------------------------------------ настройки */
-  chrome.storage.sync.get(ERM.DEFAULTS, (v) => { cfg = Object.assign({}, ERM.DEFAULTS, v); });
+  // язык: 'auto' — как в браузере (через chrome.i18n), иначе тянем словарь у service worker
+  function applyLang(lang) {
+    if (!lang || lang === 'auto') { ERM.setMessages(null); return; }
+    try {
+      chrome.runtime.sendMessage({ type: 'erm-locale', lang }, (data) => {
+        if (chrome.runtime.lastError) return;
+        ERM.setMessages(data);
+      });
+    } catch (e) { /* no-op */ }
+  }
+
+  chrome.storage.sync.get(ERM.DEFAULTS, (v) => {
+    cfg = Object.assign({}, ERM.DEFAULTS, v);
+    applyLang(cfg.lang);
+  });
   chrome.storage.onChanged.addListener((ch, area) => {
     if (area !== 'sync') return;
     for (const k in ch) cfg[k] = ch[k].newValue;
+    if (ch.lang) applyLang(cfg.lang);
     if (open) hide(false);
   });
 
