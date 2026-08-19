@@ -1,0 +1,101 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>ERM стенд</title>
+<style>
+ html,body{margin:0;height:100%;font:14px system-ui}
+ .excalidraw{position:fixed;inset:0;background:#fff;--color-primary:#6965db;--island-bg-color:#fff;--text-primary-color:#1b1b1f}
+ .excalidraw.theme--dark{background:#121212;--color-primary:#a8a5ff;--island-bg-color:#232329;--text-primary-color:#e3e3e8}
+ .App-toolbar{position:fixed;top:14px;left:50%;transform:translateX(-50%);display:flex;gap:4px;
+   background:var(--island-bg-color);padding:6px;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.15);z-index:5}
+ .App-toolbar button{width:34px;height:34px;border:0;border-radius:8px;background:transparent;cursor:pointer;
+   font-size:11px;color:var(--text-primary-color)}
+ .App-toolbar button[aria-pressed=true]{background:#e0dfff;color:#3b37b0}
+ .App-menu__left{position:fixed;left:14px;top:70px;background:var(--island-bg-color);padding:12px;
+   border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.15);z-index:5;width:190px}
+ .App-menu__left h4{margin:0 0 6px;font-size:11px;color:var(--text-primary-color);opacity:.6;font-weight:600}
+ .color-picker-container{display:flex;gap:6px;align-items:center;margin-bottom:12px}
+ .color-picker__top-picks{display:flex;gap:5px}
+ .color-picker__button{width:22px;height:22px;border-radius:5px;border:1px solid rgba(0,0,0,.12);
+   background:var(--swatch-color);cursor:pointer;padding:0}
+ .color-picker__button.active-color{width:26px;height:26px;margin-left:6px;border-radius:7px;
+   box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+ .color-picker-content{background:var(--island-bg-color);padding:10px;border-radius:8px;
+   box-shadow:0 8px 30px rgba(0,0,0,.25)}
+ .popwrap{position:fixed;left:215px;top:80px;z-index:9}
+ .color-picker-input{width:110px;font:13px ui-monospace,monospace;padding:5px 7px;border-radius:6px;
+   border:1px solid rgba(0,0,0,.15)}
+ #log{position:fixed;left:12px;bottom:12px;font:12px/1.5 ui-monospace,monospace;white-space:pre;
+   color:var(--text-primary-color);opacity:.75;z-index:5}
+</style></head>
+<body>
+<div class="excalidraw excalidraw-container">
+  <div class="App-toolbar"></div>
+  <div class="App-menu__left Island" id="left" hidden>
+    <div class="selected-shape-actions"><div id="rows"></div></div>
+  </div>
+  <div id="log"></div>
+</div>
+<script>
+const TOOLS=['selection','rectangle','diamond','ellipse','arrow','line','freedraw','text','image','eraser','hand','frame'];
+const COLORABLE=new Set(['freedraw','rectangle','diamond','ellipse','arrow','line','text']);
+const KEYMAP={v:'selection','1':'selection',r:'rectangle','2':'rectangle',d:'diamond','3':'diamond',
+ o:'ellipse','4':'ellipse',a:'arrow','5':'arrow',l:'line','6':'line',p:'freedraw','7':'freedraw',
+ t:'text','8':'text','9':'image',e:'eraser','0':'eraser',h:'hand',f:'frame'};
+const bar=document.querySelector('.App-toolbar');
+TOOLS.forEach(id=>{const b=document.createElement('button');b.dataset.testid='toolbar-'+id;
+ b.setAttribute('aria-pressed', id==='freedraw'?'true':'false');b.textContent=id.slice(0,2);bar.appendChild(b);});
+bar.appendChild(Object.assign(document.createElement('button'),{textContent:'⋮'}));
+
+const log=[];function say(s){log.unshift(s);log.length=Math.min(log.length,10);document.getElementById('log').textContent=log.join('\n');}
+
+/* --- макет левой панели: два ряда «Обводка» и «Фон», как в настоящем Excalidraw --- */
+const STROKE_PICKS=['#1e1e1e','#e03131','#2f9e44','#1971c2','#f08c00'];
+const BG_PICKS=['transparent','#ffc9c9','#b2f2bb','#a5d8ff','#ffec99'];
+function row(label, picks){
+  const c=document.createElement('div'); c.className='color-picker-container';
+  const tp=document.createElement('div'); tp.className='color-picker__top-picks';
+  picks.forEach(p=>{const b=document.createElement('button');b.className='color-picker__button';
+    b.dataset.testid='color-top-pick-'+p;b.style.setProperty('--swatch-color',p);tp.appendChild(b);});
+  const trig=document.createElement('button');
+  trig.className='color-picker__button active-color';
+  trig.setAttribute('aria-label',label);
+  trig.style.setProperty('--swatch-color', picks[0]);
+  c.append(tp,trig);
+  trig.addEventListener('click',()=>togglePop(trig,label));
+  return c;
+}
+let pop=null;
+function togglePop(trig,label){
+  if(pop){pop.remove();pop=null;say('попап закрыт');return;}
+  pop=document.createElement('div'); pop.className='popwrap';
+  pop.innerHTML='<div class="Island"><div class="color-picker-content properties-content">'+
+    '<input class="color-picker-input" value="'+trig.style.getPropertyValue('--swatch-color').replace('#','')+'"></div></div>';
+  document.body.appendChild(pop);
+  say('попап открыт: '+label);
+  pop.querySelector('input').addEventListener('input',e=>{
+    const hex='#'+e.target.value.replace('#','');
+    trig.style.setProperty('--swatch-color',hex);
+    say(label+' → '+hex+'  ✔');
+  });
+}
+document.getElementById('rows').append(row('Обводка',STROKE_PICKS), row('Фон',BG_PICKS));
+
+function setTool(t){
+  document.querySelectorAll('[data-testid^=toolbar-]').forEach(b=>b.setAttribute('aria-pressed',
+    b.dataset.testid==='toolbar-'+t?'true':'false'));
+  document.getElementById('left').hidden = !COLORABLE.has(t);   // панель только у рисующих
+  if(pop){pop.remove();pop=null;}
+  say('инструмент → '+t+'  ✔');
+}
+setTool('freedraw');
+document.addEventListener('keydown',e=>{
+  const mod=e.metaKey||e.ctrlKey;
+  if(mod&&e.key.toLowerCase()==='z'){say((e.shiftKey?'REDO':'UNDO')+'  ✔');return;}
+  const t=KEYMAP[(e.key||'').toLowerCase()];
+  if(t&&!mod) setTool(t);
+});
+document.addEventListener('keydown',e=>{if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='d')
+  document.querySelector('.excalidraw').classList.toggle('theme--dark');});
+</script>
+<script src="chrome-stub.js"></script>
+<script src="../src/common.js"></script>
+<script src="../src/content.js"></script>
+</body></html>

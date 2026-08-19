@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Excalidraw Radial Menu — настройки</title>
+<script src="chrome-stub.js"></script>
+<link rel="stylesheet" href="../src/options.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 48 48" class="brand-mark" aria-hidden="true">
+      <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2" opacity=".25"/>
+      <path d="M24 5a19 19 0 0 1 16.5 9.5L24 24z" fill="currentColor" opacity=".9"/>
+      <path d="M40.5 33.5A19 19 0 0 1 7.5 33.5L24 24z" fill="currentColor" opacity=".45"/>
+      <circle cx="24" cy="24" r="6.5" fill="var(--bg)"/>
+    </svg>
+    <div>
+      <h1>Excalidraw Radial Menu</h1>
+      <p>Круговое меню инструментов возле курсора — для пера и планшета</p>
+    </div>
+  </div>
+  <span class="saved" id="saved">Сохранено</span>
+</header>
+
+<main>
+  <section class="col">
+    <div class="card">
+      <h2>Горячая клавиша</h2>
+      <p class="hint">Назначьте эту же клавишу на кнопку пера в драйвере Huion.</p>
+      <button id="hotkey" class="hotkey">Caps Lock</button>
+      <div class="warn" id="capsWarn" hidden>
+        <strong>Caps Lock на macOS</strong> присылает нажатие через раз: первое нажатие открывает меню,
+        второе — выбирает инструмент. Работает, но индикатор Caps будет мигать.
+        Для варианта «нажал-подержал-отпустил» удобнее назначить на перо, например,
+        <code>F13</code>, <code>`</code> или <code>Alt&nbsp;+&nbsp;Q</code>.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Как выбирать</h2>
+      <label class="row radio"><input type="radio" name="mode" value="auto">
+        <span><b>Авто</b><i>Держите — отпустили: выбор. Быстрый тап — меню остаётся висеть.</i></span></label>
+      <label class="row radio"><input type="radio" name="mode" value="hold">
+        <span><b>Удержание</b><i>Меню живёт, только пока клавиша зажата.</i></span></label>
+      <label class="row radio"><input type="radio" name="mode" value="toggle">
+        <span><b>Переключатель</b><i>Нажал — открыл, нажал ещё раз — выбрал.</i></span></label>
+      <label class="row check"><input type="checkbox" id="followCursor"><span>Открывать возле курсора</span></label>
+      <label class="row check"><input type="checkbox" id="quickNumbers"><span>Выбор цифрами 1–9 при открытом меню</span></label>
+      <label class="row check"><input type="checkbox" id="showKbd"><span>Показывать буквы горячих клавиш</span></label>
+    </div>
+
+    <div class="card">
+      <h2>Цвет</h2>
+      <p class="hint">Задержитесь пером на секторе рисующего инструмента, не отпуская клавишу —
+        кольцо схлопнется в центр и оттуда расцветёт палитра. Отпустили в центре — только инструмент,
+        цвет не тронут.</p>
+      <label class="row slider"><span>Задержка до палитры<em id="dwellV"></em></span>
+        <input type="range" id="dwellMs" min="0" max="800" step="25"></label>
+      <label class="row slider"><span>Что меняем</span>
+        <select id="colorTarget">
+          <option value="stroke">Цвет обводки</option>
+          <option value="background">Цвет фона</option>
+        </select></label>
+      <h3>Палитра</h3>
+      <div class="swatches" id="palette"></div>
+    </div>
+
+    <div class="card">
+      <h2>Вид</h2>
+      <label class="row slider"><span>Размер<em id="radiusV"></em></span>
+        <input type="range" id="radius" min="80" max="190" step="2"></label>
+      <label class="row slider"><span>Толщина кольца<em id="innerV"></em></span>
+        <input type="range" id="innerRatio" min="25" max="62" step="1"></label>
+      <label class="row slider"><span>Просвет секторов<em id="gapV"></em></span>
+        <input type="range" id="gapPx" min="0" max="20" step="1"></label>
+      <label class="row slider"><span>Мёртвая зона<em id="deadV"></em></span>
+        <input type="range" id="deadzone" min="0" max="80" step="2"></label>
+      <label class="row slider"><span>Скорость анимации<em id="animV"></em></span>
+        <input type="range" id="animSpeed" min="0" max="25" step="1"></label>
+      <label class="row slider"><span>Тема</span>
+        <select id="theme">
+          <option value="auto">Как в Excalidraw</option>
+          <option value="light">Светлая</option>
+          <option value="dark">Тёмная</option>
+        </select></label>
+    </div>
+  </section>
+
+  <section class="col">
+    <div class="card preview-card">
+      <h2>Колесо <small>нажмите на сектор, чтобы поменять</small>
+        <button class="ghost" id="previewMode">показать палитру</button></h2>
+      <div class="preview" id="preview">
+        <div class="slot-picker" id="slotPicker" hidden>
+          <div class="sp-head"><b id="spTitle"></b><button class="sp-x" id="spClose">✕</button></div>
+          <div class="sp-scroll">
+            <h4>Инструменты</h4><div class="sp-grid" id="spTools"></div>
+            <h4>Цвета из палитры</h4><div class="sp-grid" id="spColors"></div>
+          </div>
+          <button class="sp-remove" id="spRemove">Убрать этот сектор</button>
+        </div>
+      </div>
+      <div class="preview-bar">
+        <button class="ghost" id="addSlot">+ добавить сектор</button>
+        <span class="bar-hint" id="slotHint">клик — сменить · перетащить — переставить</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Список <small id="count"></small></h2>
+      <p class="hint">То же самое списком: перетаскивайте, чтобы менять порядок. Первый пункт колеса — всегда сверху, дальше по часовой стрелке.</p>
+      <div class="chips" id="chosen"></div>
+      <h3>Добавить</h3>
+      <div class="chips pool" id="pool"></div>
+      <button class="reset" id="reset">Сбросить всё к настройкам по умолчанию</button>
+    </div>
+  </section>
+</main>
+
+<script src="../src/common.js"></script>
+<script src="../src/options.js"></script>
+</body>
+</html>

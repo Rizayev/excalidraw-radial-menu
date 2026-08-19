@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Excalidraw Radial Menu",
+  "version": "1.0.0",
+  "description": "Круговое меню инструментов Excalidraw возле курсора по горячей клавише. Сделано для пера и графических планшетов.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://excalidraw.com/*",
+    "https://*.excalidraw.com/*"
+  ],
+  "background": { "service_worker": "src/background.js" },
+  "content_scripts": [
+    {
+      "matches": ["https://excalidraw.com/*", "https://*.excalidraw.com/*"],
+      "js": ["src/common.js", "src/content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "options_ui": { "page": "src/options.html", "open_in_tab": true },
+  "action": {
+    "default_title": "Excalidraw Radial Menu — настройки",
+    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+}
